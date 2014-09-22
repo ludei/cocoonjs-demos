@@ -1,0 +1,529 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<!--
+iPad minimal web app HTML/CSS template (Responsive Web Design, no JS required)
+
+@author Xavi Esteve
+@website http://xaviesteve.com/2899/ipad-iphone-mobile-html-css-template-for-web-apps/
+@version 1.0
+@Last Updated: 31 January 2012
+@license Public Domain (free + no need to attribute, I'd be glad if you send me a link to your creation)
+
+
+Notes:
+- Header position bug when scrolling: When you scroll down, the header may move to the middle of the screen. Fix it by removing the # from the URL.
+
+-->
+<title>iPad/iPhone/mobile HTML/CSS template for web apps</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<link rel="apple-touch-icon" href="favicon-114.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" /><!-- hide top bar in mobile safari-->
+<!--<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" /> translucent top bar -->
+<!--<link rel="stylesheet" type="text/css" media="screen" href="style.css" />-->
+<link rel="shortcut icon" href="/favicon.ico">
+<style type="text/css">
+/* Eric Meyer's Reset */html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{border:0;font-size:100%;font:inherit;vertical-align:baseline;margin:0;padding:0;}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block;}body{line-height:1;}ol,ul{list-style:none;}blockquote,q{quotes:none;}blockquote:before,blockquote:after,q:before,q:after{content:none;}table{border-collapse:collapse;border-spacing:0;}
+
+/* Common */
+strong,.strong {font-weight:bold;}
+.center {text-align:center;}
+
+/* Shared classes */
+.header {background: #aeb2be; /* Old browsers */background: -moz-linear-gradient(top, #ffffff 0%, #aeb2be 100%); /* FF3.6+ */background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#aeb2be)); /* Chrome,Safari4+ */background: -webkit-linear-gradient(top, #ffffff 0%,#aeb2be 100%); /* Chrome10+,Safari5.1+ */background: -o-linear-gradient(top, #ffffff 0%,#aeb2be 100%); /* Opera 11.10+ */background: -ms-linear-gradient(top, #ffffff 0%,#aeb2be 100%); /* IE10+ */background: linear-gradient(top, #ffffff 0%,#aeb2be 100%); /* W3C */filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#aeb2be',GradientType=0 ); /* IE6-9 */
+border-bottom:1px solid #000;height:43px;position:fixed;text-align:center;top:0;left:0;}
+
+.header .title {color:#71787F;font-size:18px;font-weight:bold;margin-top:10px;text-shadow:0 1px 1px #fff;}
+
+/* Structure */
+html, #wrap {background:#d8dae0;font: 16px normal Helvetica,sans-serif;-webkit-user-select: none;}
+
+	#main {background:#d8dae0;height:100%;padding:63px 20px 20px 320px;position:relative;vertical-align:top;}
+		#main .header {padding-left:155px;width:100%;}
+			#main .header .left,
+			#main .header .right {background: #7A8091; /* Old browsers */background: -moz-linear-gradient(top, #999999 0%, #333333 100%); /* FF3.6+ */background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#999999), color-stop(100%,#333333)); /* Chrome,Safari4+ */background: -webkit-linear-gradient(top, #999999 0%,#333333 100%); /* Chrome10+,Safari5.1+ */background: -o-linear-gradient(top, #999999 0%,#333333 100%); /* Opera 11.10+ */background: -ms-linear-gradient(top, #999999 0%,#333333 100%); /* IE10+ */background: linear-gradient(top, #999999 0%,#333333 100%); /* W3C */filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#999999', endColorstr='#333333',GradientType=0 ); /* IE6-9 */
+color: #fff;border-radius: 5px;border: 1px solid #6d6d6d;font-size: 12px;left: 310px;position: fixed;top: 9px;padding: 5px 8px;text-decoration:none;}
+			#main .header .title {}
+			#main .header .right {right: 10px;left: auto;}
+		#main .content {}
+			#main .content>:first-child {margin-top:0 !important;}
+			#main .content .title {font-size:18px;font-weight:bold;margin:20px 0 10px;}
+			#main .content .title2 {color:#4C536C;font-size:16px;font-weight:bold;margin:20px 0 10px;}
+			#main .content .title3 {}
+			#main .content .title4 {}
+			#main .content .title5 {}
+			#main .content>p {color:#4C536C;margin:10px 0;text-shadow:0 1px 1px #ccc;}
+			#main .content p.note {color:#4C536C;font-size:12px;text-align:center;text-shadow:0 1px 1px #ccc;}
+
+			/* Box white */
+			#main .content .box-white {background:#fff;border:1px solid #B4B7BB;border-radius:10px;}
+				#main .content .box-white p {color:#000;border-bottom:1px solid #B4B7BB;font-weight:bold;margin:0;padding:10px;}
+					#main .content .box-white p:last-child {border-bottom:none;}
+				#main .content .box-white p span {color:#4C556C;float:right;font-weight:normal;}
+					#main .content .box-white p span.detail {color: #999;float: none;font-size:12px;margin-left:5px;}
+					#main .content .box-white p span.arrow {color: #666;float: none;font-family: monospace;font-weight: bold;margin-left: 5px;text-shadow: 0 1px 1px #666;}
+
+			/* Tables */
+			#main table {margin:20px 0 10px;width:100%;}
+				#main table thead th {color:#848B9A;font-size:90%;font-weight:normal;margin:20px 0 10px;padding-bottom:10px;text-align:left;}
+					#main table thead th:first-child {color:#000;font-size:16px;font-weight:bold;}
+				#main table tbody {background:#fff;border:1px solid #B4B7BB;border-radius:10px;/* not working */}
+					#main table tbody tr {border-bottom:1px solid #B4B7BB;}
+						#main table tbody tr:last-child {border-bottom:none;}
+						#main table tbody tr td {color:#4C556C;padding:10px 0;}
+							#main table tbody tr td:first-child {color:#000;padding-left:10px;}
+							#main table tbody tr td:last-child {padding-right:10px;}
+
+							/* Dirty fix attempt for tbody border-radius */
+							#main table tbody {border-spacing: 0;}
+								#main table tbody tr {border:1px solid #B4B7BB;border-radius:10px;}
+								#main table tbody tr:first-child td:first-child {border-top-left-radius:10px;}
+								#main table tbody tr:first-child td:last-child {border-top-right-radius:10px;}
+								#main table tbody tr:last-child td:first-child {border-bottom-left-radius:10px;}
+								#main table tbody tr:last-child td:last-child {border-bottom-right-radius:10px;}
+								#main table tbody tr:last-child {border-bottom:1px solid #B4B7BB;}
+
+				/* Links */
+				a {color:#0085d5;text-decoration:none;-webkit-touch-callout: none;}
+				#main .content .box-white p a,
+				#main .content table a {display: block;padding: 10px;margin: -10px;}
+
+				/* Forms and buttons */
+				#main .content p label {width:15%;} /* Labels not currently clickable without scripting */
+				#main .content p input[type=text],
+				#main .content p input[type=password],
+				#main .content p select {background:none;border:none;color:#4C556C;float:right;font-size:14px;margin-top: -1px;width:84%;}
+				#main .content p select {margin-right:15px;}
+				#main .content .button {color:#fff;cursor:pointer;border:1px solid #999;border-radius: 5px;font-size:16px;font-weight:bold;padding: 8px;width:25%;}
+				#main .content .button.red {background: #D42E32; /* Old browsers */
+background: -moz-linear-gradient(top, #d58e94 0%, #d42e32 50%, #be1012 51%, #90191b 100%); /* FF3.6+ */background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#d58e94), color-stop(50%,#d42e32), color-stop(51%,#be1012), color-stop(100%,#90191b)); /* Chrome,Safari4+ */background: -webkit-linear-gradient(top, #d58e94 0%,#d42e32 50%,#be1012 51%,#90191b 100%); /* Chrome10+,Safari5.1+ */background: -o-linear-gradient(top, #d58e94 0%,#d42e32 50%,#be1012 51%,#90191b 100%); /* Opera 11.10+ */background: -ms-linear-gradient(top, #d58e94 0%,#d42e32 50%,#be1012 51%,#90191b 100%); /* IE10+ */background: linear-gradient(top, #d58e94 0%,#d42e32 50%,#be1012 51%,#90191b 100%); /* W3C */filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d58e94', endColorstr='#90191b',GradientType=0 ); /* IE6-9 */
+border-color:#9A8185;}
+
+
+	#sidebar {background:#BCBEC4;border-right:1px solid #000;height:100%;left:0;position:fixed;top:0;vertical-align:top;width:300px;z-index:1;}
+		#sidebar .header {width:300px;}
+			#sidebar .header .title {}
+		#sidebar .content {padding: 43px 0 20px 0;}
+			#sidebar .content .nav {}
+				#sidebar .content .nav a {background:#D9DCE0;border-top:1px solid #E7EAED;border-bottom:1px solid #D0D3D7;color:#000;display:block;font-weight:900;height: 17px;padding: 12px 10px 16px 10px;text-decoration:none;}
+					#sidebar .content .nav a.active {background: #0375EE;/* Old browsers */background: -moz-linear-gradient(top, #058CF5 0%, #015DE6 100%); /* FF3.6+ */background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#058CF5), color-stop(100%,#015DE6)); /* Chrome,Safari4+ */background: -webkit-linear-gradient(top, #058CF5 0%,#015DE6 100%); /* Chrome10+,Safari5.1+ */background: -o-linear-gradient(top, #058CF5 0%,#015DE6 100%); /* Opera 11.10+ */background: -ms-linear-gradient(top, #058CF5 0%,#015DE6 100%); /* IE10+ */background: linear-gradient(top, #058CF5 0%,#015DE6 100%); /* W3C */filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#058CF5', endColorstr='#015DE6',GradientType=0 ); /* IE6-9 */
+					border-top:1px solid #015DE6;color:#fff;text-shadow:0 1px 1px #333;}
+					#sidebar .content .nav a span {color:#4C556C;float:right;font-weight:normal;}
+						#sidebar .content .nav a.active span {color:#fff;}
+					#sidebar .content .nav a .ico {background:#999;border-radius:5px;display: inline-block;float: none;height: 28px;margin: -5px 10px 0 0;vertical-align: middle;width: 28px;}
+					#sidebar .content .nav a .info {background: #E20000;border: 1px solid #C00;border-radius: 100%;box-shadow:0 1px 1px #999;color: white;font-size: 12px;display: block;padding: 1px 5px;}
+			#sidebar .content p {color:#4C536C;font-size:14px;padding:10px;text-shadow:0 1px 1px #ccc;}
+
+/* All portable */
+@media only screen and (max-device-width: 1024px) {
+	#sidebar {overflow:scroll;} /* Sidebar is only scrollable in portable devices, you can change that */
+}
+/* iPhone */
+@media only screen {
+	#sidebar {display:none;}
+	#main {padding-left:20px;}
+		#main .header {padding-left:0;}
+			#main .header .left {left:10px;}
+
+#main .content p label {}
+				#main .content p input[type=text],
+				#main .content p input[type=password],
+				#main .content p select {width:60%;}
+}
+
+</style>
+	<script src="../../build/cocoon.js"></script>
+	<script>
+
+        Cocoon.Proxify.console();
+
+		var pushRegistered = false;
+		var channel = "";
+		var subscribed = false;
+
+		/**
+	     * Notification Service Listener Callbacks
+	     */
+
+	    function onPushNotificationServiceRegistered() {
+	        pushRegistered = true;
+	        alert("Push notification service successfully registered")
+	        setLogText("Push notification service successfully registered");
+	    }
+
+	    function onPushNotificationServiceUnregistered() {
+	        pushRegistered = false;
+	        alert("Push notification service unregistered")
+	        setLogText("Push notification service unregistered");
+	    }
+
+	    function onPushNotificationServiceFailedToRegister() {
+	        pushRegistered = false;
+	        alert("Push notification service failed to register, error: " + error);
+	        setLogText("Push notification service failed to register, error: " + error);
+	    }
+
+	    function onLocalNotificationReceived(userData)
+	    {
+	        // alert("Local notification received, data: " + JSON.stringify(userData));
+	        setLogText("Local notification received, data: " + JSON.stringify(userData));
+	    }
+
+	    function onPushNotificationReceived(userData)
+	    {
+	        alert("Push notification received data: " + JSON.stringify(userData));
+	        setLogText("Push notification received data: " + JSON.stringify(userData));
+	    }
+
+	    function onPushNotificationSuccessfullyDelivered(notificationId)
+	    {
+	        setLogText("Push notification successfully delivered, id: " + notificationId);
+	    }
+
+	    function onPushNotificationDeliveryError(notificationId, error)
+	    {
+	        setLogText("Push notification delivery error, id: " + notificationId + ", error: " + error);
+	    }
+
+	    /**
+	     * Helper functions
+	     */
+
+	    function setLogText(msg)
+	    {
+			var log = document.getElementById('log');
+			log.innerHTML = msg + "<br>" + log.innerHTML;
+		}
+
+	    function registerPush() {
+	    	if (isNotificationsAvailable)
+			{
+				if (pushRegistered)
+		            alert('Already registered in the push service');
+		        else
+                    Cocoon.Notification.Push.register();
+	        }
+			else
+			{
+				setLogText("Unable to register. Notification service available in this platform");
+			}
+		}
+
+		function unregisterPush() {
+			if (isNotificationsAvailable)
+			{
+				if (pushRegistered)
+                    Cocoon.Notification.Push.unregister();
+		        else {
+		            alert("Not yet registered in the notification service");
+		            onPushNotificationServiceUnregistered();
+		        }
+	        }
+			else
+			{
+				setLogText("Sorry, no notification Service available in this platform");
+			}
+		}
+
+		function subscribe() {
+			if (isNotificationsAvailable)
+			{
+				//The channel name must start with a letter and contain only letters, numbers, dashes, and underscores.
+				var regexp = /[^\w_-\d]/i;
+				channel = document.getElementById("channel").value;
+
+				var validString = !regexp.test(channel);
+				if ((channel.length > 4) && validString) {
+                    Cocoon.Notification.unsubscribe(channel);
+                    Cocoon.Notification.subscribe(channel);
+
+
+					setLogText("Subscribed to channel: " + channel);
+					alert("Subscribed to channel: " + channel);
+					subscribed = true;
+
+				} else {
+					setLogText("Error subscribing to channel: " + channel + ". The channel identifier must have more than 4 characters and contain only letters, numbers, dashes, and underscores");
+					alert("Error subscribing to channel: " + channel + ". The channel identifier must have more than 4 characters and contain only letters, numbers, dashes, and underscores");
+					subscribed = false;
+				}
+			}
+			else
+			{
+				setLogText("Sorry, no notification Service available in this platform");
+			}
+		}
+
+		function sendPush() {
+			if (isNotificationsAvailable)
+			{
+				if (pushRegistered) {
+					if (subscribed) {
+						var message = document.getElementById('message').value;
+						var data = document.getElementById('data').value;
+						var badge = Number(document.getElementById('badge').value);
+						var sound = (document.getElementById('sound').value.toLowerCase() == "true");
+						var userData = JSON.parse(data);
+						var channels = new Array();
+						channels[0] = channel;
+
+                        var pushNotification = Cocoon.Notification.Push.create({
+                                    message:message,
+                                    soundEnabled:sound,
+                                    badgeNumber:badge,
+                                    userData:userData,
+                                    channels:channels,
+                                    expirationTime:0,
+                                    expirationTimeInterval:0
+                                }
+                        );
+
+                        var pushNotificationId = Cocoon.Notification.Push.send(pushNotification);
+
+			        } else {
+			        	alert("Subscribe to a channel before sending push notifications.");
+			        }
+
+		        } else {
+		        	alert("Register with the Push service before sending notifications.");
+		        }
+	        }
+			else
+			{
+				setLogText("Sorry, no Push service available in this platform");
+			}
+		}
+
+		function sendLocal() {
+			if (isNotificationsAvailable)
+			{
+				var message = document.getElementById('message').value;
+				var data = document.getElementById('data').value;
+				var badge = Number(document.getElementById('badge').value);
+				var sound = (document.getElementById('sound').value.toLowerCase() == "true");
+				var delay = Number(document.getElementById('delay').value) * 1000;
+				var userData = JSON.parse(data);
+
+				var scheduleTime = new Date().getTime() + delay;
+
+                var localNotification = Cocoon.Notification.Local.create({
+                            message:message,
+                            soundEnabled:sound,
+                            badgeNumber:badge,
+                            userData:userData,
+                            contentBody:"This is the local notification body",
+                            contentTitle:"Local notification title",
+                            date:scheduleTime
+                        }
+                );
+
+
+				createCancelNotificationButton(localNotification.id);
+                Cocoon.Notification.Local.send(localNotification);
+	        }
+			else
+			{
+				setLogText("Sorry, no notification Service available in this platform");
+			}
+		}
+
+		function createCancelNotificationButton(notificationId){
+			var target = document.getElementById("cancelContainer");
+			var newButton = document.createElement("input");
+
+			newButton.setAttribute('type','button');
+			newButton.setAttribute('name','cancel');
+			newButton.setAttribute('value','Cancel Notification ' + notificationId);
+			newButton.setAttribute("id", notificationId);
+			newButton.addEventListener("touch", cancelLocal);
+			newButton.addEventListener("click", cancelLocal);
+
+			target.appendChild(newButton);
+		}
+
+		function cancelLocal(e){
+			if (isNotificationsAvailable){
+				
+                Cocoon.Notification.Local.cancelAllNotifications(e.target.id);
+
+				//Make the button dissapear
+				var target = document.getElementById(e.target.id);
+				target.parentNode.removeChild(target);
+			}
+
+		}
+
+		function cancelAllLocal() {
+			if (isNotificationsAvailable)
+			{
+				var target = document.getElementById("cancelContainer");
+				while(target.firstChild){
+					target.removeChild(target.firstChild);
+				}
+
+                Cocoon.Notification.Local.cancelAllNotifications();
+			}
+			else
+			{
+				setLogText("Sorry, no notification Service available in this platform");
+			}
+		}
+
+		function clearIconBadge() {
+			if (isNotificationsAvailable)
+			{
+				Cocoon.Notification.setBadgeNumber(0);
+			}
+			else
+			{
+				setLogText("Sorry, no notification Service available in this platform");
+			}
+		}
+   	</script>
+</head>
+
+<body>
+	<div id="wrap">
+		<div id="main">
+			<div class="header">
+
+				<h1 class="title">Notifications</h1>
+
+			</div><!--header-->
+
+			<div class="content">
+				<p>This demo shows the notifications support in CocoonJS.</p>
+				<p>Two notification types are supported: Push notifications and Local notifications.</p>
+
+				<h2 class="title2">Data</h2>
+
+				<p>In both notification types you can send a message that will appear in the notifications bar and also some JSON data can be attached so your application can get that data as a dictionary when the notification is opened.</p>
+
+				<div class="box-white">
+					<p><label for="field1">Message</label><input id="message" type="text" value="I'm a notification" /></p>
+					<p><label for="field2">JSON Data</label><input id="data" type="text" value='{"key1" : "value1", "key2": "value2"}' /></p>
+					<p><label for="field3">Badge</label><input id="badge" type="text" value='1' /></p>
+					<p><label for="field4">Sound</label><input id="sound" type="text" value='true' /></p>
+					<p><label for="field4">Delay (secs)</label><input id="delay" type="text" value='5' /></p>
+				</div>
+				<p>iOS only: In iOS you can reset the application icon badge number.</p>
+				<p class="center">
+					<input type="submit" class="button red" value="Reset Icon Badge" onClick="clearIconBadge();"/>
+				</p>
+
+				<h2 class="title2">Push notifications</h2>
+
+				<p>
+					The first thing to do to receive Push notifications is to register to the push service.<br>
+					If you decide not to continue receiving notifications, you can unregister from it at any time.
+				</p>
+
+				<p class="center">
+					<input type="submit" class="button red" value="Register push" onclick="registerPush();"/>
+					<input type="submit" class="button red" value="Unregister push" onclick="unregisterPush();"/>
+				</p>
+
+				<p>After being registered you have to define the channel your notifications will be targeted to.<br>
+					Set a channel identifier in the field below and subcribe to it.
+					 The channel name must start with a letter and contain only letters, numbers, dashes, and underscores.
+				</p>
+
+				<div class="box-white">
+					<p><label for="field1">Channel</label><input id="channel" type="text" value="" /></p>
+				</div>
+				<p class="center">
+					<input type="submit" class="button red" value="Subscribe" onClick="subscribe();"/>
+				</p>
+
+				<p>If you have registered and set a channel you are ready to send a push notification with the parameters defined in the Data section.</p>
+				<p class="center">
+					<input type="submit" id="sendPush" class="button red" value="Send push" onclick="sendPush();"/>
+				</p>
+
+				<h2 class="title2">Local notifications</h2>
+
+				<p>Unlike the Push notifications, the local notifications can be cancelled so they dissapear from the notification bar.</p>
+
+				<p class="center">
+					<input type="submit" class="button red" value="Send local" onClick="sendLocal();"/>
+					<input type="submit" class="button red" value="Cancel All local" onClick="cancelAllLocal();"/>
+				</p>
+				<p id="cancelContainer" class="center"></p>
+
+				<h2 class="title2">Log</h2>
+
+				<div class="box-white">
+					<p class="center" id="log">No log</p>
+				</div><!--box-white-->
+
+				<p class="center">
+					<input type="submit" class="button red" value="Clear" onClick="log.innerHTML = 'No log';"/>
+				</p>
+
+			</div><!--content-->
+
+		</div><!--main-->
+
+	</div><!--wrap-->
+
+	<script type="text/javascript">
+        var isNotificationsAvailable = false;
+
+		function start()
+		{
+			if (Cocoon.Notification.nativeAvailable)
+			{
+
+				isNotificationsAvailable = true;
+
+				Cocoon.Notification.setBadgeNumber(0);
+
+                /**
+                 * Local notifications events
+                 */
+                Cocoon.Notification.Local.on("notification", {
+                    received : function(userdata){
+                        onLocalNotificationReceived(userdata);
+                    }
+                });
+
+                /**
+                 * Push notifications event
+                 */
+                Cocoon.Notification.Push.on("register", {
+                    success : function(){
+                        onPushNotificationServiceRegistered();
+                    },
+                    unregister : function(){
+                        onPushNotificationServiceUnregistered();
+                    },
+                    error : function(){
+                        onPushNotificationServiceFailedToRegister();
+                    }
+                });
+
+                Cocoon.Notification.Push.on("notification", {
+                    received : function(userdata){
+                        onPushNotificationReceived(userdata);
+                    }
+                });
+
+                Cocoon.Notification.Push.on("deliver", {
+                    success : function(notificationId){
+                        onPushNotificationSuccessfullyDelivered(notificationId);
+                    },
+                    error : function(notificationId, error){
+                        onPushNotificationDeliveryError(notificationId, error);
+                    }
+                });
+
+                Cocoon.Notification.start();
+
+		    }
+		}
+
+		window.addEventListener("load", start, false);
+	</script>
+</body>
+</html>

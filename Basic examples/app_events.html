@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <script type="text/javascript" src="../build/cocoon.js"></script>
+    <script type="text/javascript">
+        console.log("Registering callbacks");
+        
+        Cocoon.App.on("suspended",function(){
+            console.log("suspended");
+        });
+
+        Cocoon.App.on("suspending",function(){
+            console.log("suspending...");
+        });
+
+        Cocoon.App.on("activated",function(){
+            console.log("activated");
+        });
+
+        Cocoon.Dialog.confirm({
+         title : "This is the title",
+         message : "Awesome message"
+        }, function(accepted){
+         if(accepted){
+             alert("The user has accepted the dialog");
+         }else{
+             alert("The user has denied the dialog");
+         }
+        });
+        
+        var dialog = new Cocoon.Widget.WebDialog();
+        dialog.show("http://www.ludei.com");
+        //This dialog will close after 15 seconds 
+        setTimeout(function(){
+         dialog.close();
+        }, 15000);
+        
+        console.log("Callbacks registered");
+        console.log( JSON.stringify(Cocoon.Device.getDeviceInfo()) );
+    </script>
+</head>
+<body>
+
+</body>
+</html>

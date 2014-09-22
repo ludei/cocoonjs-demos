@@ -1,0 +1,63 @@
+<!doctype html>
+<html class="no-js" lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+        <title>Proyecto</title>
+
+        <meta name="viewport" content="width=device-width, user-scalable=no" />
+
+        <link rel="stylesheet" href="resources/stylesheets/main.css" media="all" />
+
+		<script src = "../../build/cocoon.js"></script>
+
+		<script>
+			function addANewPatternButton(text)
+			{
+				var li = document.createElement("li");
+				li.innerHTML = '<a href="#" class="button bug" ontouchend="playPattern(\'' + text + '\');"><img src="resources/images/ico/pattern.png" width="15" height="15" alt="" /> ' + text.toUpperCase() + '</a>';
+				document.getElementById("patternButtonList").appendChild(li);
+			}
+
+			function playPattern(name)
+			{
+                Cocoon.App.forwardAsync("playPattern('" + name + "');");
+			}
+		</script>
+ 
+    </head>
+    
+    <body>
+
+        <div id="container">
+			
+			<div id="menu">
+				<ul id="patternButtonList">
+					<li><a href="#" class="button sword" ontouchend="playPattern('Final Fantasy Song');"><img src="resources/images/ico/sword.png" width="14" height="12" alt="" /> FINAL FANTASY SONG</a></li>
+					<li><a href="#" class="button deathstar" ontouchend="playPattern('Star Wars Imperial March');"><img src="resources/images/ico/death-star.png" width="15" height="15" alt="" /> STAR WARS IMPERIAL MARCH</a></li>
+					<li><a href="#" class="button unicorn" ontouchend="playPattern('Horse');"><img src="resources/images/ico/unicorn.png" width="21" height="22" alt="" /> UNICORN</a></li>
+					<li><a href="#" class="button heart" ontouchend="playPattern('HeartBeat');"><img src="resources/images/ico/heart.png" width="14" height="13" alt="" /> HEARTBEAT</a></li>
+					<li><a href="#" class="button laugh" ontouchend="playPattern('Laugh');"><img src="resources/images/ico/laugh.png" width="24" height="11" alt="" /> LAUGH</a></li>
+					<li><a href="#" class="button engine" ontouchend="playPattern('Engine');"><img src="resources/images/ico/engine.png" width="17" height="16" alt="" /> ENGINE</a></li>
+					<li><a href="#" class="button bug" ontouchend="playPattern('Whatever');"><img src="resources/images/ico/bug.png" width="15" height="15" alt="" /> STRANGE PATTERN</a></li>
+				</ul>
+			</div>
+
+
+			<div id="controls">
+				<div id="controls_wrap">
+					<form method="post">
+						<textarea name="results" id="results" class="fieldbox"></textarea>
+					
+						<span class="button pattern" id="create_pattern" ontouchstart="Cocoon.App.forwardAsync('createPattern(true);');" ontouchend="Cocoon.App.forwardAsync('createPattern(false);');"><img src="resources/images/ico/pattern.png" width="21" height="19" alt="" /><br />PRESS TO CREATE PATTERN</span>
+						<span class="button trashcan" id="trashcan" ontouchend="Cocoon.App.forwardAsync('clearPattern();');"><img src="resources/images/ico/trashcan.png" width="16" height="22" alt="Delete" /></span>
+					</form>
+				</div>
+			</div>
+
+        </div>
+
+    </body>
+    
+</html>
