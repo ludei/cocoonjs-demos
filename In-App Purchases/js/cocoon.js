@@ -21,6 +21,8 @@
     <li><a href="Cocoon.WebView.html">WebView</a></li>
     <li><a href="Cocoon.Widget.html">Widget</a></li>
 </ul>
+ * In addition to all the previously mentioned, in the following link you'll find an <a href="http://support.ludei.com/hc/en-us/articles/201821276-Extensions-overview">overview of all the avaliable features</a> in which  each extensions support and availability are detailed.
+ 
  * We hope you find everything you need to get going here, but if you stumble on any problems with the docs or the extensions, 
  * just drop us a line at our forum (www.ludei.com) and we'll do our best to help you out.
  * <h3>Tools</h3>
@@ -865,6 +867,7 @@ Cocoon.define("Cocoon.App" , function(extension){
     * },
     * error : function(){
     *     ...
+    * }
     * });
     */
     extension.loadInTheWebView = function(path, callbacks, storageType)
@@ -3472,7 +3475,7 @@ Cocoon.define("Cocoon.Widget" , function(extension){
 	* 	error: function(errorMessage){ ... }
 	* });
 	* // Initialize store service
-	* Cocoon.store.initialize({
+	* Cocoon.Store.initialize({
 	*     sandbox: false,
 	*     managed: true
 	* });
@@ -3644,7 +3647,7 @@ Cocoon.define("Cocoon.Widget" , function(extension){
 	* @memberof Cocoon.Store
 	* @function initialize
 	* @example
-	* Cocoon.store.initialize();
+	* Cocoon.Store.initialize();
 	*/
 	extension.initialize = function(params){
 		
@@ -3790,7 +3793,7 @@ Cocoon.define("Cocoon.Widget" , function(extension){
     * 	success: function(transactionId){ ... },
     * 	error: function(transactionId, err){ ... }
     * });
-	* Cocoon.Store.consume("magic.sword");
+	* Cocoon.Store.consume(transactionId, "magic.sword");
 	*/ 
 	extension.consume = function(transactionId, productId) {
 		if (Cocoon.Store.nativeAvailable)
