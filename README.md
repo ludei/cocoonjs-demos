@@ -15,9 +15,9 @@ Here you will find a list of sample demos showing the variety of things you can 
 * Touch
 * WebView
 
-We hope you find everything you need to get going here, but if you stumble on any problems with the docs or the extensions, just drop us a line at [our help center](https://support.ludei.com). and we'll do our best to help you out.
+We hope you find everything you need to get going here, but if you stumble on any problems with the docs or the extensions, just drop us a line at [our help center](https://support.ludei.com) and we will do our best to help you out.
 
-##Demos list
+##Demo list
 
 * Ads: A demo that shows how to how to manage the ads service both for banners and full screen ads. 
 * Basic examples: Basic device features (on suspended, on activated, dialogs, ...).
@@ -32,13 +32,13 @@ We hope you find everything you need to get going here, but if you stumble on an
 * Multiplayer: A demo that shows a real time multiplayer mode and works both for Google Play Games and Game Center. 
 * Notifications: A demo that shows how to use both local notifications and push notifications. 
 * Rate: It allows you to to conect to the store to rate an app. 
-* Sound: It provides an easy example of how to use audio basic functionalities (play, pause, loop, ...).
+* Sound: It provides an easy example of how to use audio basic functionalities (play, pause, stop, loop, ...).
 * Store-skeleton: Basic example that simulates an In-app purchase. 
 * Vibration: It shows how to use the vibration feature and create different vibration patherns. Only available in Android devices. 
 * Webview: A demo that shows how to deal with the different functionalities regarding the webview. 
 
 ##Useful links
 
-How to use: https://www.ludei.com/cocoonjs/how-to-use/
-Documentation: http://doc.ludei.com/3.0.0/
-Cloud compiler: http://cloud.ludei.com
+How to use: https://www.ludei.com/cocoonjs/how-to-use/  
+Documentation: http://doc.ludei.com/3.0.0/  
+Cloud compiler: http://cloud.ludei.com  
