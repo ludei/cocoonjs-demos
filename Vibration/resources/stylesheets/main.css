@@ -1,0 +1,448 @@
+@import url(http://fonts.googleapis.com/css?family=Oswald:400,700);
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+nav,
+section {
+  display: block;
+}
+audio,
+canvas,
+video {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+}
+audio:not([controls]) {
+  display: none;
+}
+html {
+  font-size: 100%;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+a:focus {
+  outline: thin dotted #333;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+a:hover,
+a:active {
+  outline: 0;
+}
+sub,
+sup {
+  position: relative;
+  font-size: 75%;
+  line-height: 0;
+  vertical-align: baseline;
+}
+sup {
+  top: -0.5em;
+}
+sub {
+  bottom: -0.25em;
+}
+img {
+  max-width: 100%;
+  vertical-align: middle;
+  border: 0;
+  -ms-interpolation-mode: bicubic;
+}
+button,
+input,
+select,
+textarea {
+  margin: 0;
+  font-size: 100%;
+  vertical-align: middle;
+}
+button,
+input {
+  *overflow: visible;
+  line-height: normal;
+}
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  padding: 0;
+  border: 0;
+}
+button,
+input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+  cursor: pointer;
+  -webkit-appearance: button;
+}
+input[type="search"] {
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  -webkit-appearance: textfield;
+}
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+textarea {
+  overflow: auto;
+  vertical-align: top;
+}
+.clearfix {
+  *zoom: 1;
+}
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+.clearfix:after {
+  clear: both;
+}
+.hide-text {
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+}
+.input-block-level {
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+}
+a {
+  color: #5c6979;
+  -webkit-transition: color 0.15s ease-in;
+  -moz-transition: color 0.15s ease-in;
+  -ms-transition: color 0.15s ease-in;
+  -o-transition: color 0.15s ease-in;
+  transition: color 0.15s ease-in;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+  color: #5c6979 !important;
+}
+a img {
+  border: 0;
+}
+p {
+  margin: 0;
+}
+p + p {
+  margin-top: 1em;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+  font-size: 1em;
+  line-height: 1.2em;
+  font-weight: normal;
+}
+ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+.hidden {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+}
+.highlighted {
+  color: #5c6979;
+}
+.left {
+  text-align: left !important;
+}
+.center {
+  text-align: center !important;
+}
+.right {
+  text-align: right !important;
+}
+.nowrap {
+  white-space: nowrap;
+}
+.w10 {
+  width: 10%;
+}
+.w20 {
+  width: 20%;
+}
+.w30 {
+  width: 30%;
+}
+.w40 {
+  width: 40%;
+}
+.w50 {
+  width: 50%;
+}
+.w60 {
+  width: 60%;
+}
+.w70 {
+  width: 70%;
+}
+.w80 {
+  width: 80%;
+}
+.w90 {
+  width: 90%;
+}
+.w100 {
+  width: 100%;
+}
+form {
+  margin: 0;
+}
+input,
+select,
+textarea {
+  color: #3f3f3f;
+}
+input,
+select,
+textarea {
+  font-size: 1em;
+  line-height: 1.4em;
+  vertical-align: middle;
+  padding: 3px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin-bottom: 0;
+  height: auto;
+  width: auto;
+}
+::-webkit-input-placeholder {
+  color: #999999;
+}
+:-moz-placeholder {
+  color: #999999;
+}
+.placeholder {
+  color: #999999;
+}
+.fieldbox {
+  background: #e6e6e6;
+  border: 1px solid #cacaca;
+  -webkit-border-radius: 5px 5px 5px 5px;
+  -moz-border-radius: 5px 5px 5px 5px;
+  border-radius: 5px 5px 5px 5px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  color: #5c6979 !important;
+  text-shadow: 0 1px 1px #fff;
+  text-transform: uppercase;
+  font-size: 1em;
+  padding: 7px;
+  -webkit-box-shadow: inset 0 0 2px 2px #cccccc;
+  -moz-box-shadow: inset 0 0 2px 2px #cccccc;
+  box-shadow: inset 0 0 2px 2px #cccccc;
+  font-family: 'Oswald', Arial, sans-serif;
+  font-weight: 400;
+}
+.button,
+.button:hover {
+  background: #e6e6e6;
+  border: 1px solid #cacaca;
+  -webkit-border-radius: 5px 5px 5px 5px;
+  -moz-border-radius: 5px 5px 5px 5px;
+  border-radius: 5px 5px 5px 5px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  display: inline-block;
+  *display: inline;
+  /* IE7 inline-block hack */
+
+  *zoom: 1;
+  width: 100%;
+  line-height: 2.5em;
+  color: #5c6979 !important;
+  text-shadow: 0 1px 1px #fff;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 1em;
+  text-decoration: none;
+  padding: 0;
+  -webkit-box-shadow: inset 0 1px 0 0 #ffffff;
+  -moz-box-shadow: inset 0 1px 0 0 #ffffff;
+  box-shadow: inset 0 1px 0 0 #ffffff;
+}
+.button *,
+.button:hover * {
+  vertical-align: middle;
+}
+.button.sword img,
+.button:hover.sword img {
+  margin: -5px 2px 0 0;
+}
+.button.deathstar img,
+.button:hover.deathstar img {
+  margin: -5px 2px 0 0;
+}
+.button.unicorn img,
+.button:hover.unicorn img {
+  margin: -9px 2px 0 0;
+}
+.button.heart img,
+.button:hover.heart img {
+  margin: -3px 2px 0 0;
+}
+.button.laugh img,
+.button:hover.laugh img {
+  margin: -2px 2px 0 0;
+}
+.button.engine img,
+.button:hover.engine img {
+  margin: -4px 2px 0 0;
+}
+.button.bug img,
+.button:hover.bug img {
+  margin: -3px 2px 0 0;
+}
+.button:hover {
+  background-color: #e5e5e5;
+  background-image: -moz-linear-gradient(top, #dfdfdf, #ededed);
+  background-image: -ms-linear-gradient(top, #dfdfdf, #ededed);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#dfdfdf), to(#ededed));
+  background-image: -webkit-linear-gradient(top, #dfdfdf, #ededed);
+  background-image: -o-linear-gradient(top, #dfdfdf, #ededed);
+  background-image: linear-gradient(top, #dfdfdf, #ededed);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed', GradientType=0);
+}
+.button:active {
+  position: relative;
+  top: 1px;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+
+  font-size: 16px;
+  line-height: 1.2em;
+  background: #fff;
+  color: #3f3f3f;
+  font-family: 'Oswald', Arial, sans-serif;
+  font-weight: 400;
+}
+#container {
+  position: relative;
+  font-size: 10px;
+  line-height: 1.2em;
+  width: 100%;
+  height: 100%;
+}
+#menu {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 40%;
+  height: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 5px 15px 5px 5px;
+}
+#menu ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  height: 100%;
+  margin-right: -15px;
+  padding-right: 15px;
+  overflow: auto;
+}
+#menu ul li {
+  margin-bottom: 1.5%;
+  font-size: 10px;
+  width: 100%;
+}
+#controls {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 60%;
+  height: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 5px 5px 65px 25px;
+  background: url(../images/layout/spacer_v.png) repeat-y 5px 0;
+}
+#controls #controls_wrap {
+  position: relative;
+  height: 100%;
+}
+#controls #controls_wrap #results {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+#controls #controls_wrap #create_pattern, #controls #controls_wrap #create_pattern:active {
+  position: absolute;
+  width: 73%;
+  height: 50px;
+  left: 0;
+  top: auto;
+  bottom: -60px;
+}
+#controls #controls_wrap #create_pattern:active {
+	bottom: -61px;
+}
+#controls #controls_wrap #create_pattern span {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 50%;
+  margin: -2em 0 0 0;
+  line-height: 2em;
+}
+#controls #controls_wrap #trashcan, #controls #controls_wrap #trashcan:active {
+  position: absolute;
+  width: 20%;
+  height: 50px;
+  right: 0;
+  top: auto;
+  bottom: -60px;
+}
+#controls #controls_wrap #trashcan:active {
+  bottom: -61px;
+}
+#controls #controls_wrap #trashcan img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: -11px 0 0 -8px;
+}

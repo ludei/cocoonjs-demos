@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>In App Purchases demo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no, minimal-ui">
+    <link rel="stylesheet" href="css/ratchet.min.css">
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/prettify.css">
+    <script src="js/prettify.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/ratchet.js"></script>
+</head>
+
+<body>
+    <header class="bar bar-nav">
+        <a class="icon icon-left-nav pull-left" data-ignore="push" href="step-one.html" data-transition="slide-out"></a>
+        <button class="btn btn-link btn-nav pull-right">
+            <a data-ignore="push" href="step-three.html" data-transition="slide-in">Step 3<span class="icon icon-right-nav"></span></a>
+        </button>
+        <h1 class="title">Purchasing a product</h1>
+    </header>
+
+    <div class="content">
+        <div class="content-padded">
+            <p>At this point, you can purchase a product</p>
+            <pre class="prettyprint">Cocoon.Store.purchase("remove.ads");</pre>
+            <p>
+                A dialog for buying the product will appear (the look of the dialog box will depend of the store service you are using).
+            </p>
+            <p>Here is an example of how will it will look in Android</p>
+            <img src="images/purschase-product.png" style="width:100%" />
+            <a data-ignore="push" href="step-three.html" data-transition="slide-in">
+                <button class="btn btn-primary btn-block">Continue to step 3</button>
+            </a>
+
+        </div>
+    </div>
+    <!-- /.content -->
+    <script type="text/javascript">
+        window.onload = function() {
+            prettyPrint();
+        };
+    </script>
+</body>
+
+</html>

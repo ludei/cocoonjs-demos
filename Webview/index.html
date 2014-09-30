@@ -1,0 +1,24 @@
+<html>
+	<head>
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+		<style>
+			body { margin: 0; padding: 0; display: block; overflow: hidden;}
+		</style>
+	</head>
+	<body>
+		<script src = "js/cocoon.js"></script>
+		<script src = "js/demo.js"></script>
+		<script>
+			Cocoon.App.WebView.on("load",{
+				success : function(){
+					Cocoon.App.showTheWebView();
+				},
+				error : function(){
+					console.log("Cannot show the Webview for some reason :/");
+					console.log(JSON.stringify(arguments));
+				}
+			});
+			Cocoon.App.loadInTheWebView("WV.html");
+		</script>
+	</body>
+</html>

@@ -1,0 +1,105 @@
+<html>
+	<body>
+
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+		<style>
+			body { margin: 0; padding: 0; display: block; overflow: hidden;}
+		</style>
+
+		<script src = "cocoon.js"></script>
+		<script>
+			// Checks if a x y position is inside a rectangle.
+			function inside(x, y, rectangle)
+			{
+				return x >= rectangle.x && y >= rectangle.y && (x < rectangle.x + rectangle.width) && (y < rectangle.y + rectangle.height);
+			};
+
+			function drawProperty(context, property)
+			{
+				context.textBaseLine = "top";
+				context.textAlign = "right";
+				context.font = "" + (property.height * 0.3) + "px Arial";
+				context.fillStyle = property.textColor;
+				context.fillText(property.text, property.x + property.width / 2, property.y + property.height / 2);
+				context.textAlign = "left";
+				context.fillText("" + property.value, property.x + property.width / 2, property.y + property.height / 2);
+			};
+
+			function updatePropertiesUsingLocation(location)
+			{
+				context.fillStyle = "black";
+				context.fillRect(0, 0, canvas.width, canvas.height);
+				for (var i = 0; i < geolocationProperties.length; i++)
+				{
+					if (geolocationProperties[i].name === "timestamp")
+					{
+						geolocationProperties[i].value = location.timestamp;
+					}
+					else
+					{
+						geolocationProperties[i].value = location.coords[geolocationProperties[i].name];
+					}
+					drawProperty(context, geolocationProperties[i]);
+				}
+			};
+
+			function showMessage(msg)
+			{
+				context.fillStyle = "black";
+				context.fillRect(0, 0, canvas.width, canvas.height);
+				context.fillStyle = "white";
+				var fontSize = Math.min(window.innerHeight * 0.15, 40);
+				context.font = "" +  fontSize + "px Arial";
+				context.textAlign = "center";
+				context.fillText(msg, canvas.width/2, canvas.height/2);
+
+			}
+
+			function geolocationError(locationError) 
+			{
+				showMessage("Geolocation Error (check console)");
+				console.error("Geolocation Error: " + locationError.message);
+			};
+
+			var geolocationProperties = 
+				[ 
+					{ name : "longitude", text:"Longitude: ", value : 0, textColor:"white", x:0, y:0, width:0, height:0 }, 
+					{ name : "latitude", text:"Latitude: ", value : 0, textColor:"white", x:0, y:0, width:0, height:0 }, 
+					{ name : "altitude", text:"Altitude: ", value : 0, textColor:"white", x:0, y:0, width:0, height:0 }, 
+					{ name : "timestamp", text:"Time Stamp: ", value : 0, textColor:"white", x:0, y:0, width:0, height:0 }, 
+					{ name : "accuracy", text:"Accuracy: ", value : 0, textColor:"white", x:0, y:0, width:0, height:0 }, 
+					{ name : "speed", text:"Speed: ", value : 0, textColor:"white", x:0, y:0, width:0, height:0 }
+				];
+
+			// Create a canvas 
+			var canvas = document.createElement("canvas");
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+			var context = canvas.getContext("2d");
+
+			for (var i = 0; i < geolocationProperties.length; i++)
+			{
+				if (geolocationProperties[i].width === 0)
+				{
+					geolocationProperties[i].width = window.innerWidth;
+					geolocationProperties[i].height = window.innerHeight / geolocationProperties.length;
+					geolocationProperties[i].x = 0;
+					geolocationProperties[i].y = i * geolocationProperties[i].height;
+				}
+			}
+
+			document.body.appendChild(canvas);
+
+			if (navigator.geolocation) 
+			{
+				showMessage("Waiting for GPS...");
+				navigator.geolocation.watchPosition(updatePropertiesUsingLocation, geolocationError);
+			}
+			else
+			{
+				showMessage("GPS not available");
+			}
+
+		</script>
+	</body>
+</html>

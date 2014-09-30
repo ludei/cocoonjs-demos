@@ -1,0 +1,40 @@
+.cmd{
+	background-color: #000;
+	width: 100%;
+	height: 100%;
+	overflow: scroll;
+	font-family: "Verdana";
+	font-size: 13px;
+	overflow-y: auto;
+	min-height: 300px;
+}
+.cmd ul{
+	color:rgb(28, 233, 28);
+	margin: 0;
+	padding: 0;
+}
+.cmd ul li{
+	margin: 0;
+	padding: 0 0 0 10px;
+	
+}
+
+.purchasebox{
+  display: none;
+}
+
+.warning_store{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: yellow;
+}
+
+.store_warning {
+	display: none;
+	text-align: center;
+}
+
+.store_available {
+	display: none;
+}

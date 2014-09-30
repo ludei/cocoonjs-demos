@@ -1,0 +1,89 @@
+<html>
+	<head>
+		<script src="js/cocoon.js"></script>
+		<script>
+			/**
+			This demo shows many new extensions that allows developers to take advantage of the native side features.
+			- How to open an URL to rate your app (for example).
+			- How to control the back button in Android and query the user if he/she wants to finish it.
+			*/
+			window.onload = function()
+			{
+				// The list of URLs for rating. As they depend on the operating system/store, different 
+				var IOS_RATING_URL = "http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=519623307&onlyLatestVersion=false&type=Purple+Software";
+				var ANDROID_RATING_URL = "market://details?id=com.ideateca.cocoonjslauncher";
+
+				// Select the rating URL depending on the operating system and if we are inside CocoonJS.
+				var ratingURL = null;
+				if (navigator.isCocoonJS)
+				{
+					if (/ios/.test(navigator.userAgent))
+					{
+						ratingURL = IOS_RATING_URL;
+					}
+					else if (/android/.test(navigator.userAgent))
+					{
+						ratingURL = ANDROID_RATING_URL;
+					}
+				}
+				else
+				{
+					ratingURL = "http://ludei.com";
+				}
+
+				var canvas = document.createElement("canvas");
+		        var dpr = window.devicePixelRatio;
+		        var w= 960;
+		        var h = 640;
+		        canvas.width= w;
+		        canvas.height= h;
+
+		        var scale = Math.min(window.innerHeight/h,window.innerWidth/w);
+
+		        canvas.style.position = "absolute";
+		        canvas.style.width = (w * scale) + "px";
+		        canvas.style.height = (h * scale) + "px";
+		        canvas.style.left = (window.innerWidth * 0.5 - w * scale * 0.5) + "px";
+		        canvas.style.top = (window.innerHeight * 0.5 - h * scale * 0.5) + "px";
+
+		        document.body.appendChild(canvas);
+
+		        var ctx= canvas.getContext("2d");
+	            ctx.clearRect(0, 0, canvas.width, canvas.height);
+	            ctx.fillStyle="White";
+	            ctx.font = "30pt Arial";
+	            ctx.textAlign = "center";
+	            ctx.fillText("Click to rate...", canvas.width/2, canvas.height/2); 
+
+                var listenerName = 'ontouchstart' in window ? "touchstart" : "click" ;
+
+				window.addEventListener(listenerName, function()
+				{
+					Cocoon.App.openURL(ratingURL);
+				});
+
+                Cocoon.App.exitCallback(function()
+				{
+					// This function is called whenever the user presses the back button in android.
+					// Return true if you want the app to finish. Return false if you do not whant to finish it (thus, you will control the app finalization).
+					// For the purpose of this example, we are going to say false so we can prompt the user to quit the app or not.
+
+                    Cocoon.Dialog.confirm({
+                        title : "Finishing the app",
+                        message : "The developer controls the app finalization. Do you really want to finish the demo?",
+                        confirmText: "Yes, finish it!",
+                        cancelText: "No, continue"
+                    }, function(accepted){
+                        if(accepted){
+                            Cocoon.App.exit();
+                        }
+                    });
+
+					return false;
+				});
+			}
+		</script>
+	</head>
+	<body bgcolor="black">
+	</body>
+</html>

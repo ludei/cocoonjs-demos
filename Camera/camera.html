@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script type="text/javascript">window.debugLevel = 2;</script>
+    <script type="text/javascript" src="cocoon.js"></script>
+    <style type="text/css">
+    video{
+      display: none;
+    }
+    </style>
+</head>
+<body>
+  <video id='v'></video>  
+  <canvas id='c'></canvas>
+</body>
+<script type="text/javascript">
+    (function() {
+
+    window.addEventListener('load', function() {
+      var isStreaming = false,
+        v = document.getElementById('v'),
+        c = document.getElementById('c'),
+        ctx = c.getContext('2d');
+        w = 200, 
+        h = 200;
+      var url = window.URL || window.webkitURL;
+
+        Cocoon.Camera.start({
+          success : function(stream){
+            console.log("Camera succes!");
+            if(Cocoon.nativeAvailable){
+              ctx.fillRect(0, 0, w, h);
+              ctx.drawImage(stream, 0, 0, w, h);
+            }else{
+              v.src = url ? url.createObjectURL(stream) : stream;
+              v.play();
+            }
+          },
+          error : function(){
+            console.log("Error", arguments);
+          }
+        });
+      if(v)
+      v.addEventListener('canplay', function(e) {
+          if (!isStreaming) {
+
+          if (v.videoWidth > 0) h = v.videoHeight / (v.videoWidth / w);
+          c.setAttribute('width', w);
+          c.setAttribute('height', h);
+
+          ctx.translate(w, 0);
+          ctx.scale(-1, 1);
+          isStreaming = true;
+          }
+      }, false),
+      v.addEventListener('play', function() {
+
+        setInterval(function() {
+          if (v.paused || v.ended) return;
+          ctx.fillRect(0, 0, w, h);
+          ctx.drawImage(v, 0, 0, w, h);
+        }, 33);
+      
+      }, false);
+      
+      })
+    })();
+    </script>
+</html>

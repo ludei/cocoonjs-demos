@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>In App Purchases demo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no, minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <link rel="stylesheet" href="css/ratchet.min.css">
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/prettify.css">
+</head>
+
+<body>
+    <header class="bar bar-nav">
+        <h1 class="title">In App Purchases demo</h1>
+    </header>
+
+    <div class="bar bar-standard bar-footer">
+        <a href="step-one.html" data-ignore="push">
+            <button class="btn btn-primary btn-block">Start tutorial</button>
+    </div>
+    </a>
+    <div class="content">
+        <div class="content-padded">
+            <h1>First steps</h1>
+            <p>This demo explains (with code snippets), how to implement in app purchases in your game. Most developers consider in-app purchases the most effective form of monetization for games and apps.
+            </p>
+            <ul>
+                <li><a href="step-one.html" data-ignore="push">1. Setting up products</a>
+                </li>
+                <li><a href="step-two.html" data-ignore="push">2. Purchasing a product</a>
+                </li>
+                <li><a href="step-three.html" data-ignore="push">3. Finishing a purchase</a>
+                </li>
+                <li><a href="step-four.html" data-ignore="push">4. Full demo</a>
+                </li>
+            </ul>
+            <img src="images/robot_shopping.jpg" style="width:100%;" />
+            <p>Apart from the examples of this demo, some configuration have to be done in the cloud compiler to get the in-app purchases working, please refer to the following article to <a data-ignore="push" href="http://support.ludei.com/hc/en-us/articles/202610573-Step-by-step-guide-Adding-In-App-Purchases-to-Android">know more</a>.</p>
+        </div>
+    </div>
+    <!-- /.content -->
+    <script type="text/javascript">
+        if (!window.CustomEvent) {
+            (function() {
+                function CustomEvent(event, params) {
+                    params = params || {
+                        bubbles: false,
+                        cancelable: false,
+                        detail: undefined
+                    };
+                    var evt = document.createEvent('CustomEvent');
+                    evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+                    return evt;
+                };
+
+                CustomEvent.prototype = window.Event.prototype;
+
+                window.CustomEvent = CustomEvent;
+            })();
+        }
+    </script>
+
+    <script src="js/prettify.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/ratchet.js"></script>
+</body>
+
+</html>

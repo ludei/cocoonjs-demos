@@ -1,0 +1,183 @@
+<html>
+	<body>
+		<script src = "cocoon.js"></script>
+		<script>
+			function getPatternIndexByPatternName(patternName)
+			{
+				var patternIndex = -1;
+				for (var i = 0; patternIndex == -1 && i < patterns.length; i++)
+				{
+					patternIndex = patterns[i].id === patternName ? i : -1;
+				}
+				return patternIndex;
+			}
+			function playPattern(patternName)
+			{
+				var patternIndex = getPatternIndexByPatternName(patternName);
+				if (patternIndex >= 0 && patternIndex < patterns.length && navigator.vibrate)
+				{
+					navigator.vibrate(patterns[patternIndex].pattern);
+					Cocoon.App.forwardAsync("setTimeout(function(){ " +
+						"document.getElementById('results').value='" + JSON.stringify(patterns[patternIndex].pattern) + "'; } , 0);");
+				}
+			};
+
+			function reallyClearPattern()
+			{
+				creatingPattern = false;
+				pattern = [];
+				patternElementVibration = false;
+				patternElementStartTimeInMilliseconds = 0;
+                Cocoon.App.forwardAsync("setTimeout(function(){ document.getElementById('results').value=''; }, 0);");
+			}
+
+			function clearPattern()
+			{
+				if (creatingPattern)
+				{
+                    Cocoon.Dialog.confirm({
+                        title : "Save pattern",
+                        message : "Do you want to save the current pattern before clearing it?",
+                        confirmText : "Yes",
+                        cancelText : "No"
+                    }, function(accepted){
+                        if(accepted){
+
+                            showPatternNameDialog();
+
+                        }else{
+
+                            reallyClearPattern();
+
+                        }
+                    });
+				}
+				else
+				{
+					reallyClearPattern();
+				}
+
+			};
+
+            function showPatternNameDialog() {
+
+                Cocoon.Dialog.prompt({
+                    title : "Pattern name",
+                    message : "Enter a name for the pattern",
+                    text: "pattern-" + patternIndex,
+                    type: Cocoon.Dialog.keyboardType.TEXT,
+                    confirmText : "Ok",
+                    cancelText : "Cancel"
+                },{
+                    success : function(text){
+
+                        var patternIndex = getPatternIndexByPatternName(text);
+                        console.log("patternIndex = " + patternIndex);
+                        if (patternIndex !== -1)
+                        {
+                            Cocoon.Dialog.confirm({
+                                title : "Invalid pattern name",
+                                message : "The pattern name already exists. Please, enter a new name or cancel clear without saving the pattern.",
+                                confirmText : "Rename",
+                                cancelText : "Cancel"
+                            }, function(accepted){
+                                if(accepted){
+
+                                    showPatternNameDialog();
+
+                                }else{
+
+                                    reallyClearPattern();
+
+                                }
+                            });
+                        }
+                        else
+                        {
+                            patterns.push({id : text, pattern : pattern});
+                            window.patternIndex++;
+                            Cocoon.App.forwardAsync("addANewPatternButton('" + text + "');");
+                            reallyClearPattern();
+                        }
+
+                    },
+                    cancel : function(){
+
+                        reallyClearPattern();
+
+                    }
+                });
+            }
+
+			function createPattern(start)
+			{
+				var currentTimeInMilliseconds = new Date().getTime();
+
+				if (start)
+				{
+					if (!creatingPattern)
+					{
+						creatingPattern = true;
+					}
+					else
+					{
+						pattern.push(currentTimeInMilliseconds - patternElementStartTimeInMilliseconds);
+					}
+					patternElementStartTimeInMilliseconds = currentTimeInMilliseconds;
+					patternElementVibration = !patternElementVibration;
+				}
+				else
+				{
+					// Process pattern
+					if (creatingPattern)
+					{
+						pattern.push(currentTimeInMilliseconds - patternElementStartTimeInMilliseconds);
+						patternElementStartTimeInMilliseconds = currentTimeInMilliseconds;
+						patternElementVibration = !patternElementVibration;
+					}
+				}
+
+				// Tell the webview to show the pattern.
+                Cocoon.App.forwardAsync("setTimeout(function(){ " +
+                        "document.getElementById('results').value=" + JSON.stringify(JSON.stringify(pattern)) + "; } , 0);");
+			};
+
+
+
+			var patterns = 
+				[ 
+					{ id:"Final Fantasy Song", pattern:[0,50,100,50,100,50,100,400,100,300,100,350,50,200 ,100,100,50,600] }, 
+					{ id:"Star Wars Imperial March", pattern:[300,400,300,400,300,400,200,300,150,100,150,400,200,300,150,100,150] }, 
+					{ id:"Horse", pattern:[0,150,50,75,50,75,50,150,50,75,50,75,50,150,50,75,50,75,50,150,50,75,50,75,50,300] }, 
+					{ id:"HeartBeat", pattern:[75,100,75,800,75, 100, 75, 800, 75, 75, 75, 800, 75,100,75,800,75, 100, 75, 800, 75, 75, 75, 800] }, 
+					{ id:"Laugh", pattern:[0, 250, 200, 250, 150, 150, 75, 150, 75, 150] }, 
+					{ id:"Whatever", pattern:[0,100,200,100,100,100,100,100,200,100,500,100,225, 100] }, 
+					{ id:"Engine", pattern:[0,200,50,175,50,150,50,125,50,100,50,75,50,50,50,75,50,100,50,125,50,150,50,157,50,200] }
+				];
+
+			var creatingPattern = false;
+			var pattern = [];
+			var patternElementVibration = false;
+			var patternElementStartTimeInMilliseconds = 0;
+			var patternIndex = 0;
+
+            Cocoon.App.loadInTheWebView("wv.html",{
+                success : function(){
+                    console.log("Showing the webview!!!!!!!!");
+                    Cocoon.App.showTheWebView();
+                },
+                error : function(){
+                    console.log("error loading wv");
+                }
+            });
+
+			setInterval(function()
+			{
+				if (creatingPattern && patternElementVibration && navigator.vibrate)
+				{
+					navigator.vibrate(1000.0/60.0);
+				}
+			}, 1.0 / 60.0);
+		</script>
+	</body>
+</html>

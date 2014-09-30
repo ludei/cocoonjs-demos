@@ -1,0 +1,176 @@
+<html>
+	<head>
+ 		<!-- <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0"/> -->
+ 	</head>
+	<body style="margin:0; padding:0; overflow:hidden;">
+		<!--
+		These files are not mandatory. They are used just to provide an easier way to access gamepad values using enumeration constants,
+		and to provide gamepad API compatibility in chrome (that uses webkitGetGamepads instead of the W3C specification function).
+		-->
+		<script src="cocoon.js"></script>
+		<script>
+			// Simple function to draw a centered text on a canvas
+			function drawText(canvasContext, text, x, y, fontSize)
+			{
+				canvasContext.font = fontSize + "px";
+				canvasContext.textAlign = "center";
+				canvasContext.fillStyle = "white";
+				canvasContext.fillText(text, x, y);
+			}
+
+			// A canvas object to draw the text on
+			var canvas = document.createElement(navigator.isCocoonJS ? 'screencanvas' : 'canvas');
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+
+	        document.body.appendChild(canvas);
+	        var canvasContext = canvas.getContext("2d");
+
+			// Listen to the gamepad connected/disconnected events (it may differ depending on the browser).
+			function gamepadconnected(e)
+			{
+				alert("gamepadconnected: gamepad.index = " + e.gamepad.index);
+			}
+
+			function gamepaddisconnected(e)
+			{
+				alert("gamepaddisconnected: gamepad.index = " + e.gamepad.index);
+			}
+
+			window.addEventListener("gamepadconnected", gamepadconnected);
+			window.addEventListener("gamepaddisconnected", gamepaddisconnected);
+			window.addEventListener("webkitgamepadconnected", gamepadconnected);
+			window.addEventListener("webkitgamepaddisconnected", gamepaddisconnected);
+
+			// The inner loop. Query about the status of the gamepads in every frame ans how the status of their values (buttons and axes).
+			var loopIntervalId = null;
+			function loop()
+			{
+				// Clear the background
+				canvasContext.fillStyle = "black";
+				canvasContext.fillRect(0, 0, canvas.width, canvas.height);
+
+				if (navigator.webkitGetGamepads)
+				{
+					// Get all the available gamepads.
+					var gamepads = navigator.webkitGetGamepads();
+
+					if (gamepads && gamepads.length > 0)
+					{
+						var x = canvas.width >> 1;
+						var y = 25;
+						var fontSize = 25;
+						var atLeastOneGamepadShown = false;
+
+						// Iterate over all the gamepads and show their values.
+						for (var i = 0; i < gamepads.length; i++)
+						{
+							var gamepad = gamepads[i];
+							if (gamepad)
+							{
+								atLeastOneGamepadShown = true;
+								var button0 = gamepad.buttons[Cocoon.Gamepad.Indices.BUTTON_0].toFixed(2);
+								var button1 = gamepad.buttons[Cocoon.Gamepad.Indices.BUTTON_1].toFixed(2);
+								var button2 = gamepad.buttons[Cocoon.Gamepad.Indices.BUTTON_2].toFixed(2);
+								var button3 = gamepad.buttons[Cocoon.Gamepad.Indices.BUTTON_3].toFixed(2);
+								var leftBumper = gamepad.buttons[Cocoon.Gamepad.Indices.BUTTON_LEFT_BUMPER].toFixed(2);
+								var rightBumper = gamepad.buttons[Cocoon.Gamepad.Indices.BUTTON_RIGHT_BUMPER].toFixed(2);
+								var leftTrigger = gamepad.buttons[Cocoon.Gamepad.Indices.BUTTON_LEFT_TRIGGER].toFixed(2);
+								var rightTrigger = gamepad.buttons[Cocoon.Gamepad.Indices.BUTTON_RIGHT_TRIGGER].toFixed(2);
+								var leftJoystick = gamepad.buttons[Cocoon.Gamepad.Indices.BUTTON_LEFT_JOYSTICK].toFixed(2);
+								var rightJoystick = gamepad.buttons[Cocoon.Gamepad.Indices.BUTTON_RIGHT_JOYSTICK].toFixed(2);
+								var dpadUp = gamepad.buttons[Cocoon.Gamepad.Indices.BUTTON_DPAD_UP].toFixed(2);
+								var dpadDown = gamepad.buttons[Cocoon.Gamepad.Indices.BUTTON_DPAD_DOWN].toFixed(2);
+								var dpadLeft = gamepad.buttons[Cocoon.Gamepad.Indices.BUTTON_DPAD_LEFT].toFixed(2);
+								var dpadRight = gamepad.buttons[Cocoon.Gamepad.Indices.BUTTON_DPAD_RIGHT].toFixed(2);
+								var leftJoystickX = gamepad.axes[Cocoon.Gamepad.Indices.AXIS_LEFT_JOYSTICK_X].toFixed(2);
+								var leftJoystickY = gamepad.axes[Cocoon.Gamepad.Indices.AXIS_LEFT_JOYSTICK_Y].toFixed(2);
+								var rightJoystickX = gamepad.axes[Cocoon.Gamepad.Indices.AXIS_RIGHT_JOYSTICK_X].toFixed(2);
+								var rightJoystickY = gamepad.axes[Cocoon.Gamepad.Indices.AXIS_RIGHT_JOYSTICK_Y].toFixed(2);
+								var menuButton = gamepad.buttons[16].toFixed(2);
+
+								// Show all the relevant information from the gamepad: id, index, all the buttons and all the axes.
+								// This code uses the CocoonJS.Gamepad.Indices enumeration so 
+								drawText(canvasContext, "index = " + gamepad.index + ", id = " + (gamepad.id ? gamepad.id : "") + ", timestamp = " + gamepad.timestamp, x, y, fontSize);
+								y += fontSize;
+								drawText(canvasContext, 
+									"BUTTON_0 = " + button0 + 
+									", BUTTON_1 = " + button1 + 
+									", BUTTON_2 = " + button2 + 
+									", BUTTON_3 = " + button3, x, y, fontSize);
+								y += fontSize;
+								drawText(canvasContext, 
+									"LEFT_BUMPER = " + leftBumper + 
+									", RIGHT_BUMPER = " + rightBumper, x, y, fontSize);
+								y += fontSize;
+								drawText(canvasContext, 
+									"LEFT_TRIGGER = " + leftTrigger + 
+									", RIGHT_TRIGGER = " + rightTrigger, x, y, fontSize);
+								y += fontSize;
+								drawText(canvasContext, 
+									"LEFT_JOYSTICK = " + leftJoystick + 
+									", RIGHT_JOYSTICK = " + rightJoystick, x, y, fontSize);
+								y += fontSize;
+								drawText(canvasContext, 
+									"DPAD_UP = " + dpadUp + 
+									", DPAD_DOWN = " + dpadDown + 
+									", DPAD_LEFT = " + dpadLeft + 
+									", DPAD_RIGHT = " + dpadRight, x, y, fontSize);
+								y += fontSize;
+								drawText(canvasContext, 
+									"LEFT_JOYSCTICK_X = " + leftJoystickX + 
+									", LEFT_JOYSTICK_Y = " + leftJoystickY, x, y, fontSize);
+								y += fontSize;
+								drawText(canvasContext, 
+									"RIGHT_JOYSCTICK_X = " + rightJoystickX + 
+									", RIGHT_JOYSTICK_Y = " + rightJoystickY, x, y, fontSize);
+								y += fontSize;
+								drawText(canvasContext, "MENU_BUTTON = " + menuButton, x, y, fontSize);
+								y += fontSize;
+
+								if (menuButton !== "0.00") {
+									alert("The menu button has been pressed!");
+								}
+
+
+								// A different and more generic way of showing all the information inside a gamepad object (but ofers less control over the presentation and the content).
+								// Itarate over all the attributes inside the gamepad object and show them all. If there is an array, also show it.
+
+								// for (var gamepadAttributeName in gamepad)
+								// {
+								// 	console.log(gamepadAttributeName);
+								// 	var gamepadAttributeValue = gamepad[gamepadAttributeName];
+								// 	if (gamepadAttributeValue instanceof Array)
+								// 	{
+								// 		var s = "";
+								// 		for (var j = 0; j < gamepadAttributeValue.length; j++)
+								// 		{
+								// 			s += j + ":" + gamepadAttributeValue[j].toFixed(2) + (j < gamepadAttributeValue.length -1 ? ", " : "");
+								// 		}
+								// 		gamepadAttributeValue = s;
+								// 	}
+								// 	drawText(canvasContext, gamepadAttributeName + ": " + gamepadAttributeValue, canvas.width / 2, y, 25);
+								// 	y += 25;
+								// }						
+							}
+						}
+
+						if (!atLeastOneGamepadShown) {
+							drawText(canvasContext, "No gamepad found in the system.", canvas.width / 2, 40);
+						}
+					}
+					else {
+						drawText(canvasContext, "No gamepad found in the system.", canvas.width / 2, 40);
+					}
+				}
+				else {
+					drawText(canvasContext, "No HTML5 gamepad API found in the system.", canvas.width / 2, 40);
+				}
+			}
+
+			// Setup a loop (60 FPS)
+			loopIntervalId = setInterval(loop, 1000 / 60);
+
+		</script>
+	</body>
+</html>
