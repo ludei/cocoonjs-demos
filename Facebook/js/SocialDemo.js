@@ -112,7 +112,7 @@
         showLeaderboard: function() {
             socialService.showLeaderboard(function(error){
                 if (error)
-                    console.error("showLeaderbord error: " + error.message);
+                    console.error("showLeaderboard error: " + error.message);
             });
 
         },
