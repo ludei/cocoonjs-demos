@@ -4,15 +4,16 @@
 		<script src="js/demoDisclaimer.js"></script>
 		<script src="js/cocoon.js"></script>
 		<script>
-            Cocoon.App.loadInTheWebView("wv.html",{
+            Cocoon.App.WebView.on("load",{
                 success : function(){
                     Cocoon.App.showTheWebView();
                 },
                 error : function(){
-                    console.log("error loading wv");
+                    console.log("Error loading wv.");
+                    console.log(JSON.stringify(arguments));
                 }
             });
-
+            Cocoon.App.loadInTheWebView("wv.html");
 		</script>
 	</head>
 </html>

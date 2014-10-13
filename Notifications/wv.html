@@ -136,8 +136,6 @@ border-color:#9A8185;}
 	<script src="js/cocoon.js"></script>
 	<script>
 
-        Cocoon.Proxify.console();
-
 		var pushRegistered = false;
 		var channel = "";
 		var subscribed = false;
@@ -280,7 +278,7 @@ border-color:#9A8185;}
                         );
 
                         var pushNotificationId = Cocoon.Notification.Push.send(pushNotification);
-
+                       
 			        } else {
 			        	alert("Subscribe to a channel before sending push notifications.");
 			        }
@@ -291,7 +289,7 @@ border-color:#9A8185;}
 	        }
 			else
 			{
-				setLogText("Sorry, no Push service available in this platform");
+				setLogText("Sorry, no Push service available in this platform.");
 			}
 		}
 
@@ -366,7 +364,7 @@ border-color:#9A8185;}
 			}
 			else
 			{
-				setLogText("Sorry, no notification Service available in this platform");
+				setLogText("Sorry, no notification Service available in this platform.");
 			}
 		}
 
@@ -377,7 +375,7 @@ border-color:#9A8185;}
 			}
 			else
 			{
-				setLogText("Sorry, no notification Service available in this platform");
+				setLogText("Sorry, no notification Service available in this platform.");
 			}
 		}
    	</script>
