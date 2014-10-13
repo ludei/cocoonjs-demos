@@ -53,7 +53,8 @@
 
     });
 
-    Cocoon.App.loadInTheWebView("WV.html",{
+    //Load the webview menu
+    Cocoon.App.WebView.on("load",{
         success : function(){
             menuReady = true;
             if (socialService.isLoggedIn())
@@ -64,6 +65,8 @@
             menuReady = true;
         }
     });
+    
+    Cocoon.App.loadInTheWebView("WV.html");
 
 //Menu methods
     window.menu = {
@@ -133,7 +136,7 @@
             socialService.logout(function(error){
                 //friendImages = [];
                 //if (error)
-                    //console.error("logout error: " + error.message);
+                //console.error("logout error: " + error.message);
             });
         }
     }
