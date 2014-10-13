@@ -41,18 +41,23 @@
         console.log("onLoginStatusChanged: " + loggedIn + " " + socialService.isLoggedIn());
         //show or hide the menu depending on the login state
         if (loggedIn) {
-            if (menuReady)
+            if (menuReady){
                 Cocoon.App.showTheWebView();
+                console.log("webview");
+            }
+
         }
         else {
-            if (menuReady)
+            if (menuReady){
                 Cocoon.App.hideTheWebView();
+                console.log("pues no");    
+            }
         }
 
     });
 
     //Load the webview menu
-    Cocoon.App.loadInTheWebView("WV.html",{
+    Cocoon.App.WebView.on("load",{
         success : function(){
             menuReady = true;
             if (socialService.isLoggedIn())
@@ -63,6 +68,8 @@
             menuReady = true;
         }
     });
+    
+    Cocoon.App.loadInTheWebView("WV.html");
 
 //Menu methods
     window.menu = {
@@ -169,6 +176,7 @@
             ctx.textAlign = "center";
             if (loggedIn) {
                 ctx.fillText("Logged in. Creating menu...", canvas.width/2, canvas.height/2);
+
             }
             else {
                 ctx.fillText("Logged out. Click to log in.", canvas.width/2, canvas.height/2);
