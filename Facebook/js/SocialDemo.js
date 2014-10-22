@@ -43,14 +43,12 @@
         if (loggedIn) {
             if (menuReady){
                 Cocoon.App.showTheWebView();
-                console.log("webview");
             }
 
         }
         else {
             if (menuReady){
-                Cocoon.App.hideTheWebView();
-                console.log("pues no");    
+                Cocoon.App.hideTheWebView(); 
             }
         }
 
