@@ -161,15 +161,16 @@
 			var patternElementStartTimeInMilliseconds = 0;
 			var patternIndex = 0;
 
-            Cocoon.App.loadInTheWebView("wv.html",{
-                success : function(){
-                    console.log("Showing the webview!!!!!!!!");
-                    Cocoon.App.showTheWebView();
-                },
-                error : function(){
-                    console.log("error loading wv");
-                }
-            });
+			Cocoon.App.WebView.on("load",{
+                success : function(){
+                    console.log("Showing the webview!!!!!!!!");
+                    Cocoon.App.showTheWebView();
+                },
+                error : function(){
+                    console.log("error loading wv");
+                }
+            });
+            Cocoon.App.loadInTheWebView("wv.html");
 
 			setInterval(function()
 			{
