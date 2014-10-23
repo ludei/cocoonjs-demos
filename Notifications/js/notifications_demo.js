@@ -20,7 +20,7 @@ function registerPush() {
         else
             Cocoon.Notification.Push.register();
     } else {
-        setLogText("Unable to register. Notification service available in this platform");
+        setLogText("Unable to register. Notification service not available in this platform.");
     }
 }
 
