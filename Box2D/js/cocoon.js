@@ -1,8 +1,8 @@
 /**
  * @fileOverview
- * Here you'll find detailed documentation for all of the CocoonJS javascript extensions. 
- * Just select the specific extension on the top to open the relevant documentation section.
- * Also, remember that the extensions' source code is provided in this open repository.
+ * Ludei's plugins are multiplatform Javascript APIs, that work in any of the three environments 
+ * of CocoonJS: accelerated canvas, webview+ and system webview.
+ * - Select the specific plugin bewlow to open the relevant documentation section.
  <ul>
     <li><a href="Cocoon.html">Cocoon</a></li>
     <li><a href="Cocoon.Ad.html">Ad</a></li>
@@ -21,10 +21,12 @@
     <li><a href="Cocoon.WebView.html">WebView</a></li>
     <li><a href="Cocoon.Widget.html">Widget</a></li>
 </ul>
- * In addition to all the previously mentioned, in the following link you'll find an <a href="http://support.ludei.com/hc/en-us/articles/201821276-Extensions-overview">overview of all the avaliable features</a> in which  each extensions support and availability are detailed.
- 
- * We hope you find everything you need to get going here, but if you stumble on any problems with the docs or the extensions, 
- * just drop us a line at our forum (www.ludei.com) and we'll do our best to help you out.
+ <br/>The CocoonJS Plugin's library (cocoon.js and cocoon.min.js) can be found at Github. <br/>
+ <a href="https://github.com/ludei/CocoonJS-Plugins"><img src="img/download.png" style="width:230px;height:51px;" /></a>
+ <br/><br/>In addition to all the previously mentioned, in the following link you'll find an <a href="http://support.ludei.com/hc/en-us/articles/201821276-Extensions-overview">overview of all the avaliable features</a> in which each plugin support and availability are detailed.
+ <br/><br/>
+ * We hope you find everything you need to get going here, but if you stumble on any problems with the docs or the plugins, 
+ * just drop us a line at our forum (support.ludei.com) and we'll do our best to help you out.
  * <h3>Tools</h3>
  <a href="http://support.ludei.com/hc/communities/public/topics"><img src="img/cocoon-tools-1.png" /></a>
  <a href="http://support.ludei.com/hc"><img src="img/cocoon-tools-2.png" /></a>
@@ -491,6 +493,15 @@
 
 });;/**
  * This namespace represents different methods to control your application.
+ *
+ * <div class="alert alert-success">
+ * <p>Here you will find demos about this namespace: </p> 
+ * <ul> <li> <a href="https://github.com/ludei/cocoonjs-demos/tree/master/Rate">Rate demo</a>.</li>
+ * <li> <a href="https://github.com/ludei/cocoonjs-demos/tree/Sound">Sound demo</a>.</li>
+ * <li> <a href="https://github.com/ludei/cocoonjs-demos/tree/Vibration">Vibration demo</a>.</li>
+ * <li> <a href="https://github.com/ludei/cocoonjs-demos/tree/master/Basic%20examples">Basic examples demo</a>.</li></ul>
+ * </div>
+ *
  * @namespace Cocoon.App
  * @example
  * // Example 1: Closes the application
@@ -746,82 +757,39 @@ Cocoon.define("Cocoon.App" , function(extension){
     return extension;
 });;Cocoon.define("Cocoon.App" , function(extension){
 
-    if (!Cocoon.nativeAvailable)
-    {
-        (function createWebView() { 
-            window.onload = function(){
-                extension.EmulatedWebView = document.createElement('div'); 
-                extension.EmulatedWebView.setAttribute('id', 'CocoonJS_App_ForCocoonJS_WebViewDiv'); 
-                extension.EmulatedWebView.style.width = 0; 
-                extension.EmulatedWebView.style.height = 0; 
-                extension.EmulatedWebView.style.position = "absolute"; 
-                extension.EmulatedWebView.style.left = 0; 
-                extension.EmulatedWebView.style.top = 0;
-                extension.EmulatedWebView.style.backgroundColor = 'transparent';
-                extension.EmulatedWebView.style.border = "0px solid #000"; 
-                extension.EmulatedWebViewIFrame = document.createElement("IFRAME"); 
-                extension.EmulatedWebViewIFrame.setAttribute('id', 'CocoonJS_App_ForCocoonJS_WebViewIFrame');
-                extension.EmulatedWebViewIFrame.setAttribute('name', 'CocoonJS_App_ForCocoonJS_WebViewIFrame');
-                extension.EmulatedWebViewIFrame.style.width = 0; 
-                extension.EmulatedWebViewIFrame.style.height = 0; 
-                extension.EmulatedWebViewIFrame.frameBorder = 0;
-                extension.EmulatedWebViewIFrame.allowtransparency = true;
-                extension.EmulatedWebView.appendChild(extension.EmulatedWebViewIFrame);
-                document.body.appendChild(extension.EmulatedWebView);
-            }
-        })(); 
-
-        extension.forwardedEventFromTheWebView = function(eventName, eventDataString) {
-            var eventData = JSON.parse(eventDataString);
-            eventData.target = window;
-            var event = new Event(eventName);
-            for (var att in eventData) {
-                event[att] = eventData[att];
-            }
-            event.target = window;
-            window.dispatchEvent(event);
-            var canvases = document.getElementsByTagName("canvas");
-            for (var i = 0; i < canvases.length; i++) {
-                event.target = canvases[i];
-                canvases[i].dispatchEvent(event);
-            }
+    function checkEmulatedWebViewReady() {
+        var emulatedWB = Cocoon.App.EmulatedWebView;
+        if (emulatedWB) {
+            return; //ready
         }
 
-        function checkEmulatedWebViewReady() {
-            var emulatedWB = Cocoon.App.EmulatedWebView;
-            if (emulatedWB) {
-                return; //ready
-            }
+        emulatedWB = document.createElement('div'); 
+        emulatedWB.setAttribute('id', 'CocoonJS_App_ForCocoonJS_WebViewDiv'); 
+        emulatedWB.style.width = 0; 
+        emulatedWB.style.height = 0; 
+        emulatedWB.style.position = "absolute"; 
+        emulatedWB.style.left = 0; 
+        emulatedWB.style.top = 0;
+        emulatedWB.style.backgroundColor = 'transparent';
+        emulatedWB.style.border = "0px solid #000"; 
 
-            emulatedWB = document.createElement('div'); 
-            emulatedWB.setAttribute('id', 'CocoonJS_App_ForCocoonJS_WebViewDiv'); 
-            emulatedWB.style.width = 0; 
-            emulatedWB.style.height = 0; 
-            emulatedWB.style.position = "absolute"; 
-            emulatedWB.style.left = 0; 
-            emulatedWB.style.top = 0;
-            emulatedWB.style.backgroundColor = 'transparent';
-            emulatedWB.style.border = "0px solid #000"; 
+        var frame = document.createElement("IFRAME");
+        frame.setAttribute('id', 'CocoonJS_App_ForCocoonJS_WebViewIFrame');
+        frame.setAttribute('name', 'CocoonJS_App_ForCocoonJS_WebViewIFrame');
+        frame.style.width = 0; 
+        frame.style.height = 0; 
+        frame.frameBorder = 0;
+        frame.allowtransparency = true;
 
-            var frame = document.createElement("IFRAME");
-            frame.setAttribute('id', 'CocoonJS_App_ForCocoonJS_WebViewIFrame');
-            frame.setAttribute('name', 'CocoonJS_App_ForCocoonJS_WebViewIFrame');
-            frame.style.width = 0; 
-            frame.style.height = 0; 
-            frame.frameBorder = 0;
-            frame.allowtransparency = true;
+        emulatedWB.appendChild(frame);
+        Cocoon.App.EmulatedWebView = emulatedWB;
+        Cocoon.App.EmulatedWebViewIFrame = frame;
 
-            emulatedWB.appendChild(frame);
-            Cocoon.App.EmulatedWebView = emulatedWB;
-            Cocoon.App.EmulatedWebViewIFrame = frame;
-
-            if(!document.body) {
-                document.body = document.createElement("body");
-            }
-            document.body.appendChild(Cocoon.App.EmulatedWebView);
+        if(!document.body) {
+            document.body = document.createElement("body");
         }
+        document.body.appendChild(Cocoon.App.EmulatedWebView);
     }
-
 
     /**
      * Pauses the Cocoon JavaScript execution loop.
@@ -831,9 +799,9 @@ Cocoon.define("Cocoon.App" , function(extension){
      * @example
      * Cocoon.App.pause();
      */
-     extension.pause = function()
-     {
-        if (Cocoon.nativeAvailable)
+    extension.pause = function()
+    {
+        if (Cocoon.App.nativeAvailable)
         {
             return Cocoon.callNative("IDTK_APP", "pause", arguments);
         }
@@ -845,9 +813,10 @@ Cocoon.define("Cocoon.App" , function(extension){
      * @example
      * Cocoon.App.resume();
      */
-     extension.resume = function()
-     {
-        if (Cocoon.nativeAvailable)
+
+    extension.resume = function()
+    {
+        if (Cocoon.App.nativeAvailable)
         {
             return Cocoon.callNative("IDTK_APP", "resume", arguments);
         }
@@ -867,37 +836,15 @@ Cocoon.define("Cocoon.App" , function(extension){
     * },
     * error : function(){
     *     ...
-    * }
     * });
     */
-    extension.loadInTheWebView = function(path, callbacks, storageType)
+    extension.loadInTheWebView = function(path, storageType)
     {
-         if(!callbacks) throw new Error("Missing success/error callbacks for Cocoon.App.loadInTheWebView");
-         if(!callbacks.success) throw new Error("Missing success callback for Cocoon.App.loadInTheWebView");
-         if(!callbacks.error) throw new Error("Missing error callback for Cocoon.App.loadInTheWebView");
-
-         var succedListener = function(){
-            extension.onLoadInTheWebViewFailed.removeEventListener(errorListener);
-            this.cllbck.apply( this || window, arguments);
-        }.bind({cllbck : callbacks.success});
-
-        var errorListener = function(){
-            extension.onLoadInTheWebViewSucceed.removeEventListener(succedListener);
-            this.cllbck.apply( this || window, arguments);
-        }.bind({cllbck : callbacks.error});
-
-        extension.onLoadInTheWebViewSucceed.addEventListenerOnce(succedListener);
-
-        extension.onLoadInTheWebViewFailed.addEventListenerOnce(errorListener);
-
-        if (Cocoon.nativeAvailable)
+        if (navigator.isCocoonJS && Cocoon.App.nativeAvailable)
         {
-            var args = [];
-            args[0] = path;
-            if(storageType) args[1] = storageType;
-            Cocoon.callNative("IDTK_APP", "loadInTheWebView", args);
+            Cocoon.callNative("IDTK_APP", "loadInTheWebView", arguments)
         }
-        else if (!navigator.isCocoonJS)
+        else
         {
             var xhr = new XMLHttpRequest();
 
@@ -906,17 +853,18 @@ Cocoon.define("Cocoon.App" , function(extension){
                 {
                     if ((xhr.status >= 200 && xhr.status <=299) || xhr.status === 0)
                     {
+
                         checkEmulatedWebViewReady();
                         var callback= function(event){
-                            extension.onLoadInTheWebViewSucceed.notifyEventListeners(path);
-                            extension.EmulatedWebViewIFrame.removeEventListener("load", callback);
+                            Cocoon.App.onLoadInTheWebViewSucceed.notifyEventListeners(path);
+                            Cocoon.App.EmulatedWebViewIFrame.removeEventListener("load", callback);
                         };
 
-                        extension.EmulatedWebViewIFrame.addEventListener(
+                        Cocoon.App.EmulatedWebViewIFrame.addEventListener(
                             "load", 
                             callback
-                            );
-                        extension.EmulatedWebViewIFrame.contentWindow.location.href= path;
+                        );
+                        Cocoon.App.EmulatedWebViewIFrame.contentWindow.location.href= path;
                     }
                     else
                     {
@@ -937,15 +885,16 @@ Cocoon.define("Cocoon.App" , function(extension){
      * @example
      * Cocoon.App.reloadWebView();
      */
-     extension.reloadWebView = function()
-     {
-        if (Cocoon.nativeAvailable)
+    extension.reloadWebView = function()
+    {
+        if (Cocoon.App.nativeAvailable && navigator.isCocoonJS)
         {
-            return Cocoon.App.forwardAsync("ext.IDTK_APP.makeCall('reload');");
+            Cocoon.callNative("IDTK_APP", "reloadWebView", arguments);
         }
-        else if (!navigator.isCocoonJS)
+        else
         {
-            extension.EmulatedWebViewIFrame.contentWindow.location.reload();
+            checkEmulatedWebViewReady();
+            Cocoon.App.EmulatedWebViewIFrame.contentWindow.location.reload();
         }
     };
 
@@ -960,8 +909,8 @@ Cocoon.define("Cocoon.App" , function(extension){
     * @example
     * Cocoon.App.showTheWebView(0 , 0 , window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio);
     */
-     extension.showTheWebView = function(x, y, width, height)
-     {
+    extension.showTheWebView = function(x, y, width, height)
+    {
         if (Cocoon.App.nativeAvailable && navigator.isCocoonJS)
         {
             Cocoon.callNative("IDTK_APP", "showTheWebView", arguments)
@@ -976,9 +925,10 @@ Cocoon.define("Cocoon.App" , function(extension){
             Cocoon.App.EmulatedWebView.style.width = (width ? width/window.devicePixelRatio : window.innerWidth)+'px';
             Cocoon.App.EmulatedWebView.style.height = (height ? height/window.devicePixelRatio : window.innerHeight)+'px';
             Cocoon.App.EmulatedWebView.style.display = "block";
+
         }
     };
-    
+
     /**
     * Hides the webview.
     * @function hideTheWebView
@@ -988,14 +938,15 @@ Cocoon.define("Cocoon.App" , function(extension){
     */
     extension.hideTheWebView = function()
     {
-        if (Cocoon.nativeAvailable)
+        if (Cocoon.App.nativeAvailable)
         {
             var javaScriptCodeToForward = "ext.IDTK_APP.makeCall('hide');";
             return Cocoon.App.forwardAsync(javaScriptCodeToForward);
         }
         else if (!navigator.isCocoonJS)
         {
-            extension.EmulatedWebView.style.display = "none";
+            checkEmulatedWebViewReady();
+            Cocoon.App.EmulatedWebView.style.display = "none";
         }
     };
 
@@ -1023,15 +974,46 @@ Cocoon.define("Cocoon.App" , function(extension){
     */
     extension.exitCallback = function(appShouldFinishCallback)
     {
-        if (navigator.isCocoonJS)
+        if (navigator.isCocoonJS && Cocoon.App.nativeAvailable)
         {
             window.onidtkappfinish = appShouldFinishCallback;
+        }
+    }
+
+    /**
+    * @private
+    * @function forwardedEventFromTheWebView
+    * @memberOf Cocoon.App
+    */
+    extension.forwardedEventFromTheWebView = function(eventName, eventDataString) {
+        var eventData = JSON.parse(eventDataString);
+        eventData.target = window;
+        var event = new Event(eventName);
+        for (var att in eventData) {
+            event[att] = eventData[att];
+        }
+        event.target = window;
+        window.dispatchEvent(event);
+        var canvases = document.getElementsByTagName("canvas");
+        for (var i = 0; i < canvases.length; i++) {
+            event.target = canvases[i];
+            canvases[i].dispatchEvent(event);
         }
     }
 
     extension.onLoadInTheWebViewSucceed = new Cocoon.EventHandler("IDTK_APP", "App", "forwardpageload");
 
     extension.onLoadInTheWebViewFailed = new Cocoon.EventHandler("IDTK_APP", "App", "forwardpagefail");
+
+    var signal = new Cocoon.Signal.createSignal();
+
+    signal.register("load", {
+        success : extension.onLoadInTheWebViewSucceed,
+        error : extension.onLoadInTheWebViewFailed
+    });
+    
+    extension.WebView = Cocoon.WebView || {};
+    extension.WebView.on = signal.expose();
 
     return extension;
 });;/**
@@ -1214,6 +1196,12 @@ Cocoon.define("Cocoon.Utils" , function(extension){
 
 });;/**
 * Dialog functions (prompt / confirm).
+*
+*<div class="alert alert-success">
+* <p>Here you will find demos about this namespace: </p> 
+* <ul> <li> <a href="https://github.com/ludei/cocoonjs-demos/tree/master/Keyboard">Keyboard demo</a>.</li>
+* <li> <a href="https://github.com/ludei/cocoonjs-demos/tree/Vibration">Vibration demo</a>.</li> </ul>
+*</div>
 * @namespace Cocoon.Dialog
 */
 Cocoon.define("Cocoon.Dialog" , function(extension){
@@ -1427,6 +1415,11 @@ Cocoon.define("Cocoon.Dialog" , function(extension){
 
 });;/**
 * This namespace represents all functionalities available in the WebView environment.
+*
+* <div class="alert alert-success">
+*   Here you will find a demo about this namespace: <a href="https://github.com/ludei/cocoonjs-demos/tree/Webview">Webview demo</a>.
+*</div>
+*
 * @namespace Cocoon.WebView
 * @example
 * Cocoon.App.loadInTheWebView("wv.html", {
@@ -1441,54 +1434,10 @@ Cocoon.define("Cocoon.Dialog" , function(extension){
 */
 
 Cocoon.define("Cocoon.WebView" , function(extension){
-    "use strict";
-    
-    if(!!navigator.isCocoonJS) {
-        /**
-        * Everytime the page is loaded, proxify the console.
-        * @ignore
-        */
-        window.addEventListener("load", function()
-        {
-            //if(Cocoon.Proxify.console)
-              //  Cocoon.Proxify.console();
 
-            // Only if we are completely outside CocoonJS (or CocoonJS' webview),
-            // setup event forwarding from the webview (iframe) to CocoonJS.
-            if (!Cocoon.nativeAvailable){
-                Cocoon.App.forwardEventsToCocoonJSEnabled = true;
-                var EVENT_ATTRIBUTES = [ 'timeStamp', 'button', 'type', 'x', 'y', 'pageX', 'pageY', 'clientX', 'clientY', 'offsetX', 'offsetY'];
-                var EVENTS = [ "dblclick", "touchmove", "mousemove", "touchend", "touchcancel", "mouseup", "touchstart", "mousedown", "release", "dragleft", "dragright", "swipeleft", "swiperight" ];
-
-                for (i = 0; i < EVENTS.length; i++) {
-                    window.addEventListener(EVENTS[i], (function(eventName) {
-                        return function(event) {
-                            if (Cocoon.App.forwardEventsToCocoonJSEnabled) {
-                                var eventData = {};
-                                var att, i;
-                                for (var att in event) {
-                                    i = EVENT_ATTRIBUTES.indexOf(att);
-                                    if (i >= 0) {
-                                        eventData[att] = event[att];
-                                    }
-                                }
-                                var jsCode = "Cocoon && Cocoon.App && Cocoon.App.forwardedEventFromTheWebView && Cocoon.App.forwardedEventFromTheWebView(" + JSON.stringify(eventName) + ", '" + JSON.stringify(eventData) + "');";
-                                Cocoon.App.forward(jsCode);
-                            }
-                        };
-                    })(EVENTS[i]));
-                }
-            }
-
-        });
-
-        return extension;
-    }
-
-    // Add the following methods to Cocoon.Webview
-    // only if we are completely outside CocoonJS 
-    // (or CocoonJS' webview)
-    if(!Cocoon.nativeAvailable) return extension;
+    if (typeof Cocoon === 'undefined' || Cocoon === null) return extension;
+    if (typeof Cocoon.App === 'undefined' || Cocoon.App  === null) return extension;
+    if (navigator.isCocoonJS) return extension;
 
     /**
     * Shows a transparent WebView on top of the Cocoon hardware accelerated environment rendering context.
@@ -1501,7 +1450,7 @@ Cocoon.define("Cocoon.WebView" , function(extension){
     */
     extension.show = function(x, y, width, height)
     {
-        if (Cocoon.nativeAvailable)
+        if (Cocoon.App.nativeAvailable)
         {
            return Cocoon.callNative("IDTK_APP", "show", arguments);
         }
@@ -1510,12 +1459,12 @@ Cocoon.define("Cocoon.WebView" , function(extension){
             var div = window.parent.document.getElementById('CocoonJS_App_ForCocoonJS_WebViewDiv');
             div.style.left = (x ? x : div.style.left)+'px';
             div.style.top = (y ? y : div.style.top)+'px';
-            div.style.width = (width ? width : window.parent.innerWidth)+'px';
-            div.style.height = (height ? height : window.parent.innerHeight)+'px';
+            div.style.width = (width ? width/window.devicePixelRatio : window.parent.innerWidth)+'px';
+            div.style.height = (height ? height/window.devicePixelRatio : window.parent.innerHeight)+'px';
             div.style.display = "block";
             var iframe = window.parent.document.getElementById('CocoonJS_App_ForCocoonJS_WebViewIFrame');
-            iframe.style.width = (width ? width : window.parent.innerWidth)+'px';
-            iframe.style.height = (height ? height : window.parent.innerHeight)+'px';
+            iframe.style.width = (width ? width/window.devicePixelRatio : window.parent.innerWidth)+'px';
+            iframe.style.height = (height ? height/window.devicePixelRatio : window.parent.innerHeight)+'px';
         }
     };
 
@@ -1526,7 +1475,7 @@ Cocoon.define("Cocoon.WebView" , function(extension){
     */
     extension.hide = function()
     {
-        if (Cocoon.nativeAvailable)
+        if (Cocoon.App.nativeAvailable)
         {
            return Cocoon.callNative("IDTK_APP", "hide", arguments);
         }
@@ -1553,21 +1502,7 @@ Cocoon.define("Cocoon.WebView" , function(extension){
     */
     extension.loadInCocoon = function(path, callbacks, storageType)
     {
-        var succedListener = function(){
-            Cocoon.WebView.onLoadInCocoonFailed.removeEventListenerOnce(errorListener);
-            this.cllbck.success.apply( this || window, arguments);
-        }.bind({cllbck : callbacks.success});
-        
-        var errorListener = function(){
-            Cocoon.WebView.onLoadInCocoonSucceed.removeEventListenerOnce(succedListener);
-            this.cllbck.error.apply( this || window, arguments);
-        }.bind({cllbck : callbacks.error});
-
-        Cocoon.WebView.onLoadInCocoonSucceed.addEventListenerOnce(succedListener);
-        
-        Cocoon.WebView.onLoadInCocoonFailed.addEventListenerOnce(errorListener);
-
-        if (Cocoon.nativeAvailable)
+        if (Cocoon.App.nativeAvailable)
         {
             var javaScriptCodeToForward = "ext.IDTK_APP.makeCall('loadPath'";
             if (typeof path !== 'undefined')
@@ -1580,34 +1515,65 @@ Cocoon.define("Cocoon.WebView" , function(extension){
             }
             javaScriptCodeToForward += ");";
 
-            return Cocoon.forwardAsync(javaScriptCodeToForward);
+            return Cocoon.App.forwardAsync(javaScriptCodeToForward);
         }
         else
         {
-            Cocoon.forwardAsync("Cocoon.load('" + path + "');");
+            Cocoon.App.forwardAsync("Cocoon.App.load('" + path + "');");
         }
     };
 
-    /**
-     * Reloads the last loaded path in the Cocoon context.
-     * @function reloadCocoon
-     * @memberof Cocoon.WebView
-     */
-    extension.reloadCocoon = function()
+    extension.reloadCocoonJS = function()
     {
-        if (Cocoon.nativeAvailable)
+        if (Cocoon.App.nativeAvailable)
         {
-            return Cocoon.forwardAsync("ext.IDTK_APP.makeCall('reload');");
+            return Cocoon.App.forwardAsync("ext.IDTK_APP.makeCall('reload');");
         }
-        else if (!navigator.isCocoon)
+        else if (!navigator.isCocoonJS)
         {
             window.parent.location.reload();
         }
     };
 
-    extension.onLoadInCocoonSucceed = new Cocoon.EventHandler("IDTK_APP", "App", "forwardpageload");
 
-    extension.onLoadInCocoonFailed = new Cocoon.EventHandler("IDTK_APP", "App", "forwardpagefail");
+    window.addEventListener("load", function()
+    {
+        Cocoon.Proxify.console();
+
+        // Only if we are completely outside CocoonJS (or CocoonJS' webview),
+        // setup event forwarding from the webview (iframe) to Cocoon.
+        if (!Cocoon.App.nativeAvailable && window.name == 'CocoonJS_App_ForCocoonJS_WebViewIFrame') {
+            Cocoon.App.forwardEventsToCocoonJSEnabled = false;
+            var EVENT_ATTRIBUTES = [ 'timeStamp', 'button', 'type', 'x', 'y', 'pageX', 'pageY', 'clientX', 'clientY', 'offsetX', 'offsetY'];
+            var EVENTS = [ "dblclick", "touchmove", "mousemove", "touchend", "touchcancel", "mouseup", "touchstart", "mousedown", "release", "dragleft", "dragright", "swipeleft", "swiperight" ];
+            function forwardEventToCocoonJS(eventName, event) {
+                var eventData = {};
+                var att, i;
+                for (var att in event) {
+                    i = EVENT_ATTRIBUTES.indexOf(att);
+                    if (i >= 0) {
+                        eventData[att] = event[att];
+                    }
+                }
+                var jsCode = "Cocoon && Cocoon.App && Cocoon.App.forwardedEventFromTheWebView && Cocoon.App.forwardedEventFromTheWebView(" + JSON.stringify(eventName) + ", '" + JSON.stringify(eventData) + "');";
+                Cocoon.App.forward(jsCode);
+            }
+            for (i = 0; i < EVENTS.length; i++) {
+                window.addEventListener(EVENTS[i], (function(eventName) {
+                    return function(event) {
+                        if (Cocoon.App.forwardEventsToCocoonJSEnabled) {
+                            forwardEventToCocoonJS(eventName, event);
+                        }
+                    };
+                })(EVENTS[i]));
+            }
+        }
+
+    });
+
+    extension.onLoadInCocoonJSSucceed = new Cocoon.EventHandler("IDTK_APP", "App", "forwardpageload");
+
+    extension.onLoadInCocoonJSFailed = new Cocoon.EventHandler("IDTK_APP", "App", "forwardpagefail");
 
     return extension;
 });;Cocoon.define("Cocoon.Proxify" , function(extension){
@@ -2564,7 +2530,7 @@ Cocoon.define("Cocoon.Widget" , function(extension){
             var me = this;
             iframe.onload = function(){
                 me.iframeloaded = true;
-                var js = "Cocoon = {}; Cocoon.Widget = {}; Cocoon.Widget.WebDialog = {} Cocoon.WebDialog.close = function()" +
+                var js = "Cocoon = {}; Cocoon.Widget = {}; Cocoon.Widget.WebDialog = {} Cocoon.Widget.WebDialog.close = function()" +
                     "{" +
                     "   window.parent.CocoonJSCloseWebDialog();" +
                     "};";
@@ -2673,6 +2639,11 @@ Cocoon.define("Cocoon.Widget" , function(extension){
 
     /**
     * This namespace represents the CocoonJS camera extension API.
+    *
+    * <div class="alert alert-success">
+	*   Here you will find a demo about this namespace: <a href="https://github.com/ludei/cocoonjs-demos/tree/master/Camera/videopuzzle">Videopuzzle demo</a>.
+	*</div>
+    *   
     * @namespace Cocoon.Camera
     * @example
     * Cocoon.Camera.start({
@@ -2920,8 +2891,13 @@ Cocoon.define("Cocoon.Widget" , function(extension){
 
     /**
     * This namespace represents the Cocoon Advertisement extension API.
+    *
+    * <div class="alert alert-success">
+	*   Here you will find a demo about this namespace: <a href="https://github.com/ludei/cocoonjs-demos/tree/master/Ads">Ads demo</a>.
+	*</div>
+    *
 	* <div class="alert alert-warning">
-	*    <strong>Warning!</strong> This JavaScript extension requires some configuration parameters on the <a href="https://ludei.zendesk.com/hc/en-us">cloud compiler</a>!.
+	*    <strong>Warning!</strong> This JavaScript extension requires some configuration parameters on the <a href="https://ludei.zendesk.com/hc/en-us">cloud compiler</a>!
 	* </div>
     * @namespace Cocoon.Ad
     * @example
@@ -3453,8 +3429,12 @@ Cocoon.define("Cocoon.Widget" , function(extension){
 
     /**
     * This namespace represents the In-app purchases extension API.
+    * <div class="alert alert-success">
+	*   Here you will find a demo about this namespace: <a href="https://github.com/ludei/cocoonjs-demos/tree/master/Store-skeleton">Store-skeleton demo</a>.
+	*</div>
+	*
     * <div class="alert alert-warning">
-	*    <strong>Warning!</strong> This JavaScript extension requires some configuration parameters on the <a href="https://ludei.zendesk.com/hc/en-us">cloud compiler</a>!.
+	*    <strong>Warning!</strong> This JavaScript extension requires some configuration parameters on the <a href="https://ludei.zendesk.com/hc/en-us">cloud compiler</a>!
 	* </div>
     * @namespace Cocoon.Store
     * @example
@@ -3793,7 +3773,7 @@ Cocoon.define("Cocoon.Widget" , function(extension){
     * 	success: function(transactionId){ ... },
     * 	error: function(transactionId, err){ ... }
     * });
-	* Cocoon.Store.consume(transactionId, "magic.sword");
+	* Cocoon.Store.consume("magic.sword");
 	*/ 
 	extension.consume = function(transactionId, productId) {
 		if (Cocoon.Store.nativeAvailable)
@@ -4161,8 +4141,14 @@ Cocoon.define("Cocoon.Widget" , function(extension){
 });;/**
  * This namespace represents the Cocoon Notification extension.
  * The following image illustrates how the notification would look like when it arrives to your device. 
+ *
  * <div> <img src="img/cocoon-notification.jpg"  height="35%" width="35%"/> <br/> <br/></div>
- * You will find a complete example about how to use this extension in the Local namespace. 
+ * <p>You will find a complete example about how to use this extension in the Local namespace.<p> 
+ *
+ * <div class="alert alert-success">
+ *   Here you will find a demo about this namespace: <a href="https://github.com/ludei/cocoonjs-demos/tree/master/Notifications">Notifications demo</a>.
+ * </div>
+ * 
  * @namespace Cocoon.Notification
  */
 Cocoon.define("Cocoon.Notification" , function(extension){
@@ -4173,8 +4159,10 @@ Cocoon.define("Cocoon.Notification" , function(extension){
 	 * This namespace represents the Cocoon Notification extension for local notifications.
 	 * @namespace Cocoon.Notification.Local
 	 * @example 
-	 * Cocoon.Notification.Local.on("notification", function(userData){
-     * 	console.log("A local notification has been received: " + userData);
+	 * Cocoon.Notification.Local.on("notification", {
+	 *   received: function(userData){
+     * 	      console.log("A local notification has been received: " + JSON.stringify(userData));
+     *   }
 	 * });
 	 *
 	 * var notificationConfig = {
@@ -4271,21 +4259,23 @@ Cocoon.define("Cocoon.Notification" , function(extension){
     */
 	extension.Push.create = function(params)
 	{
-
 		var properties = {
-			message : "",
-			soundEnabled : true,
-			badgeNumber : 0,
-			userData : {},
-			channels : "",
-			expirationTime : 0,
-			expirationTimeInterval : 0
+		message : "",
+		soundEnabled : true,
+		badgeNumber : 0,
+		userData : {},
+		channels : [],
+		expirationTime : 0,
+		expirationTimeInterval : 0
 		};
 
-		var args = Cocoon.clone(properties,params);		
+        for (var prop in properties) {
+            if (!params[prop]) {
+                params[prop] = properties[prop];
+            }
+        }
 
-		return args;
-
+		return params;
 	};
 
 	/**
@@ -4496,12 +4486,14 @@ Cocoon.define("Cocoon.Notification" , function(extension){
     * @event On received for local notifications callback  
     * @memberof Cocoon.Notification.Local
 	* @example
-	* Cocoon.Notification.Local.on("notification", function(userData){
-    * 	console.log("A local notification has been received: " + userData);
+	* Cocoon.Notification.Local.on("notification", {
+    *	received : function(userData){
+    * 	 	console.log("A local notification has been received: " + JSON.stringify(userData));
+    *	}
 	* });
     */
     signal.register("notification", {
-    	received : extension.onLocalNotificationReceived,
+    	received : extension.onLocalNotificationReceived
     });
 
 	extension.Local.on = signal.expose();
@@ -4516,7 +4508,7 @@ Cocoon.define("Cocoon.Notification" , function(extension){
     * @event On register for push notifications callbacks
     * @memberof Cocoon.Notification.Push
     * @example
-	* Cocoon.Notification.Push.on("register", function(){
+	* Cocoon.Notification.Push.on("register", {
     * 	success : function(){ ... }
     *	unregister : function(){ ... }
     *	error : function(error){ ... }
@@ -4525,7 +4517,7 @@ Cocoon.define("Cocoon.Notification" , function(extension){
     signal.register("register", {
     	success : extension.onRegisterForPushNotificationsSucceed,
     	unregister : extension.onUnregisterForPushNotificationsSucceed,
-    	error : extension.onRegisterForPushNotificationsFailed,
+    	error : extension.onRegisterForPushNotificationsFailed
     });
 
 	/**
@@ -4534,8 +4526,10 @@ Cocoon.define("Cocoon.Notification" , function(extension){
     * @event On received for push notifications callback
     * @memberof Cocoon.Notification.Push
 	* @example
-	* Cocoon.Notification.Push.on("notification", function(userData){
-    * 	console.log("A push notification has been received: " + userData);
+	* Cocoon.Notification.Push.on("notification",{
+	*	received : function(userData){
+    * 		console.log("A push notification has been received: " + JSON.stringify(userData));
+    *	}
 	* });
     */
     signal.register("notification", {
@@ -4549,14 +4543,14 @@ Cocoon.define("Cocoon.Notification" , function(extension){
     * @event On deliver for push notifications callbacks
     * @memberof Cocoon.Notification.Push
 	* @example 
-	* Cocoon.Notification.Push.on("deliver", function(){
+	* Cocoon.Notification.Push.on("deliver", {
     * 	success : function(notificationId){ ... }
     *	error : function(error){ ... }
 	* });
     */
     signal.register("deliver", {
     	success : extension.onPushNotificationDeliverySucceed,
-    	error : extension.onPushNotificationDeliveryFailed,
+    	error : extension.onPushNotificationDeliveryFailed
     });
 
 	extension.Push.on = signal.expose();
@@ -4726,7 +4720,7 @@ Cocoon.define("Cocoon.Social" , function(extension){
         * Checks if the current logged in user has publish permissions.
         * @function hasPublishPermissions     
         * @memberOf Cocoon.Social.Interface          
-        * @param callback The callback function. Response params: permissions granted and error
+        * @param callback The callback function. It receives the following parameters: permissions granted and error
         */
         hasPublishPermissions: function(callback) {
             callback(true);
@@ -4736,7 +4730,7 @@ Cocoon.define("Cocoon.Social" , function(extension){
         * Requests publish permissions for the current logged in user.
         * @function requestPublishPermissions     
         * @memberOf Cocoon.Social.Interface            
-        * @param callback The callback function.  It receives the following parameters: granted and error
+        * @param callback The callback function. It receives the following parameters: granted and error
         */
         requestPublishPermissions: function(callback) {
             if (callback)
@@ -4747,7 +4741,7 @@ Cocoon.define("Cocoon.Social" , function(extension){
         * Retrieves user information for a specific user ID.
         * @function requestUser     
         * @memberOf Cocoon.Social.Interface       
-        * @param {function} callback - The callback function.  It receives the following parameters: 
+        * @param {function} callback - The callback function. It receives the following parameters: 
         * - {@link Cocoon.Social.User}.
         * - Error.
         * @param {string} userID - The id of the user to retrieve the information from. If no userID is specified, the currently logged in user is assumed.
@@ -4832,7 +4826,7 @@ Cocoon.define("Cocoon.Social" , function(extension){
         * @function publishMessage   
         * @memberOf Cocoon.Social.Interface            
         * @param {Cocoon.Social.Message} message A object representing the information to be published.
-        * @param {function} [callback] The callback function.  It receives the following parameters: error.
+        * @param {function} [callback] The callback function. It receives the following parameters: error.
         * @example
         * var fb = Cocoon.Social.Facebook;
         *
@@ -4868,7 +4862,7 @@ Cocoon.define("Cocoon.Social" , function(extension){
         * @function publishMessageWithDialog   
         * @memberOf Cocoon.Social.Interface         
         * @param {Cocoon.Social.Message} message A object representing the information to be published
-        * @param {function} callback The callback function.  It receives the following parameters: error
+        * @param {function} callback The callback function. It receives the following parameters: error
         * @example 
         * var fb = Cocoon.Social.Facebook;
         *
@@ -4913,38 +4907,156 @@ Cocoon.define("Cocoon.Social" , function(extension){
         _leaderboardsTemplate: null,
         _achievementsTemplate: null,
       
+        /**
+        * Retrieves the score for a user from a specific leaderboard
+        * @function requestScore   
+        * @memberOf Cocoon.Social.Interface 
+        * @param {function} callback The callback function. It receives the following parameters: 
+        * - {@link Cocoon.Social.Score}. 
+        * - Error. 
+        * @param {Cocoon.Social.ScoreParams} [params] The params to retrieve the score. If no params are specified, the currently logged in user and the default leaderboard are assumed.
+        */      
         requestScore: function(callback, params) {
             callback(null, {message:"Not implemented!"})
         },
 
+        /**
+         * Submits the score for a user to a specific leaderboard
+         * @function submitScore   
+         * @memberOf Cocoon.Social.Interface 
+         * @param {number} score The score to submit
+         * @param {function} [callback] The callback function. Response params: error.
+         * @param {Cocoon.Social.ScoreParams} [params] The params to submit the score. If no params are specified, the currently logged in user and the default leaderboard are assumed.
+         */
         submitScore: function(score, callback, params ) {
             if (callback)
                 callback({message:"Not implemented!"})
         },
-
+        
+        /**
+        * Shows a modal leaderboard view using a platform dependant view.
+        * @param {Cocoon.Social.ScoreParams} [params] The params to choose the leaderboard and other settings. If no params are specified the default leaderboard id and settings will be assumed.
+        * @param {function} [callback] The callback function invoked when the modal leaderboard view is closed by the user. Response params: error.
+        * @function showLeaderboard   
+        * @memberOf Cocoon.Social.Interface     
+        * @example 
+        * var fb = Cocoon.Social.Facebook;
+        *
+        * fb.init({
+        *     appId: "XXXXXXXXXXXXXXXXXXXXX",
+        *     channelUrl: "//connect.facebook.net/en_US/all.js"
+        * });
+        * 
+        * var socialService = fb.getSocialInterface();
+        * var loggedIn = socialService.isLoggedIn();
+        *
+        * socialService.showLeaderboard(function(error){
+        *     if (error)
+        *         console.error("showLeaderbord error: " + error.message);
+        * });
+        */
         showLeaderboard : function(callback, params) {
             if (callback)
                 callback({message:"Not implemented!"})
         },
 
+        /**
+        * Retrieves all the achievements of the application.
+        * @function requestAllAchievements  
+        * @memberOf Cocoon.Social.Interface 
+        * @param {function} callback The callback function. It receives the following parameters: 
+        * - Array of {@link Cocoon.Social.Achievement} 
+        * - Error.
+        */
         requestAllAchievements : function(callback) {
             callback([], {message:"Not implemented!"})
         },
 
+        /**
+         * Retrieves the achievements earned by a user.
+         * @function requestAchievements  
+         * @memberOf Cocoon.Social.Interface 
+         * @param {function} callback The callback function. It receives the following parameters: 
+         * - Array of {@link Cocoon.Social.Achievement}.
+         * - Error.
+         * @param {string} [userId] The id of the user to retrieve the information from. If no userID is specified, the currently logged in user is assumed.
+         */
         requestAchievements : function(callback, userID) {
             callback([], {message:"Not implemented!"})
         },
 
+        /**
+        * Submits the achievement for the current logged In user
+        * @function submitAchievements  
+        * @memberOf Cocoon.Social.Interface 
+        * @param achievementID The achievement ID to submit
+        * @param callback [callback] The callback function. Response params: error.
+        * @example
+        * var fb = Cocoon.Social.Facebook;
+        *
+        * fb.init({
+        *     appId: "XXXXXXXXXXXXXXXXXXXXX",
+        *     channelUrl: "//connect.facebook.net/en_US/all.js"
+        * });
+        * 
+        * var socialService = fb.getSocialInterface();
+        *
+        * socialService.submitAchievement( achievementID, function(error){
+        *     if (error)
+        *         console.error("submitAchievement error: " + error.message);
+        * });
+        */       
         submitAchievement: function(achievementID, callback) {
             if (callback)
                 callback({message:"Not implemented!"})
         },
         
+        /**
+        * Resets all the achievements of the current logged in user
+        * @function resetAchievements  
+        * @memberOf Cocoon.Social.Interface          
+        * @param {function} [callback] The callback function. Response params: error.
+        * @example
+        * var fb = Cocoon.Social.Facebook;
+        *
+        * fb.init({
+        *     appId: "XXXXXXXXXXXXXXXXXXXXX",
+        *     channelUrl: "//connect.facebook.net/en_US/all.js"
+        * });
+        * 
+        * var socialService = fb.getSocialInterface();
+        *
+        * socialService.resetAchievements(function(error){
+        *     if (error)
+        *         console.error("resetAchievements error: " + error.message);
+        * });
+        */         
         resetAchievements : function(callback) {
             if (callback)
                 callback([], {message:"Not implemented!"})
         },
-        
+     
+       /**
+        * Shows a modal achievements view using a platform dependant view.
+        * @param {function} [callback] The callback function invoked when the modal achievements view is closed by the user. Response params: error.
+        * @function showAchievements  
+        * @memberOf Cocoon.Social.Interface     
+        * @example 
+        * var fb = Cocoon.Social.Facebook;
+        *
+        * fb.init({
+        *     appId: "XXXXXXXXXXXXXXXXXXXXX",
+        *     channelUrl: "//connect.facebook.net/en_US/all.js"
+        * });
+        * 
+        * var socialService = fb.getSocialInterface();
+        * var loggedIn = socialService.isLoggedIn();
+        *
+        * socialService.showAchievements(function(error){
+        *     if (error)
+        *         console.error("showAchievements error: " + error.message);
+        * });
+        */       
         showAchievements : function(callback) {
             if (!this._achievementsTemplate)
                 throw "Please, provide a html template for achievements with the setTemplates method";
@@ -4986,17 +5098,34 @@ Cocoon.define("Cocoon.Social" , function(extension){
             });
         },
 
+        /**
+         * Set the map for using custom achievement IDs.
+         * The map must be a customID to realID map (accessing map.customID must return the real achievement ID).
+         * Whenever this map is enabled users are able to submit achievements with the real achievement ID or with the custom one.
+         * @params {object} map The achievements map. A null map disables this feature.
+         * @function setAchievementsMap 
+         * @memberOf Cocoon.Social.Interface 
+         */
         setAchievementsMap: function(map) {
             this._achievementsMap = map;
             if (this._cachedAchievements) {
                this.syncAchievementsMap(this._cachedAchievements);
             }
         },
-
+        /**
+         * Provides some templates to be used in the leaderboards and achievements views
+         * Some social services (like Facebook) don't have a native view to show achievements or leaderboards views, and use html templates instead.
+         * @param {string} leaderboardsTemplate Relative path to the leaderboards template.
+         * @param {string} achievementsTemplate Relative path to the achievements template.
+         * @function setTemplates
+         * @memberOf Cocoon.Social.Interface 
+         */
         setTemplates: function(leaderboardsTemplate, achievementsTemplate) {
             this._leaderboardsTemplate = leaderboardsTemplate;
             this._achievementsTemplate = achievementsTemplate;
         },
+
+        //Internal utility methods
 
         setCachedAchievements: function(achievements) {
             this._cachedAchievements = achievements;
@@ -5227,7 +5356,7 @@ Cocoon.define("Cocoon.Social" , function(extension){
 
     return extension;
 });;/**
- * This namespace represents all the basic functionalities available in the CocoonJS extension API.
+ * 
  * @private
  * @namespace Cocoon.Social.Manager
  */
@@ -5402,8 +5531,13 @@ Cocoon.define("Cocoon.Social" , function(extension){
     return extension;
 });;/**
  * This namespace represents all the basic functionalities available in the CocoonJS extension API.
+ *
+ * <div class="alert alert-success">
+ *   Here you will find a demo about this namespace: <a href="https://github.com/ludei/cocoonjs-demos/tree/Google%20Play%20Games">Google Play Games demo</a>.
+ *</div>
+ *
  * <div class="alert alert-warning">
- *    <strong>Warning!</strong> This JavaScript extension requires some configuration parameters on the <a href="https://ludei.zendesk.com/hc/en-us">cloud compiler</a>!.
+ *    <strong>Warning!</strong> This JavaScript extension requires some configuration parameters on the <a href="https://ludei.zendesk.com/hc/en-us">cloud compiler</a>!
  * </div>
  * The following example shows the full process of how to publish a message using GooglePlay extension.The following image illustrates how the result should look like.  
  * <div><br/><img src="img/cocoon-socialgp-publish3.png" heigh="50%" width="55%"/> </div>
@@ -5924,7 +6058,7 @@ Cocoon.define("Cocoon.Social" , function(extension){
             else {
                 if (!this._leaderboardsTemplate)
                     throw "Please, provide a html template for leaderboards with the setTemplates method";
-                var dialog = new Cocoon.App.WebDialog();
+                var dialog = new Cocoon.Widget.WebDialog();
                 var callbackSent = false;
                 dialog.show(this._leaderboardsTemplate, function(error) {
                     dialog.closed = true;
@@ -6125,8 +6259,13 @@ Cocoon.define("Cocoon.Social" , function(extension){
 });
 ;/**
  * This namespace represents all the basic functionalities available in the CocoonJS extension API.
+ *
+ * <div class="alert alert-success">
+ *   Here you will find a demo about this namespace: <a href="https://github.com/ludei/cocoonjs-demos/tree/Multiplayer">Multiplayer demo</a>.
+ *</div>
+ *
  * <div class="alert alert-warning">
- *    <strong>Warning!</strong> This JavaScript extension requires some configuration parameters on the <a href="https://ludei.zendesk.com/hc/en-us">cloud compiler</a>!.
+ *    <strong>Warning!</strong> This JavaScript extension requires some configuration parameters on the <a href="https://ludei.zendesk.com/hc/en-us">cloud compiler</a>!
  * </div>
  * @namespace Cocoon.Social.GameCenter
  */
@@ -6738,8 +6877,13 @@ Cocoon.define("Cocoon.Social" , function(extension){
 });
 ;/**
  * This namespace represents all the basic functionalities available in the CocoonJS extension API.
+ *
+ * <div class="alert alert-success">
+ *   Here you will find a demo about this namespace: <a href="https://github.com/ludei/cocoonjs-demos/tree/Facebook">Facebook demo</a>.
+ *</div>
+ * 
  * <div class="alert alert-warning">
- *    <strong>Warning!</strong> This JavaScript extension requires some configuration parameters on the <a href="https://ludei.zendesk.com/hc/en-us">cloud compiler</a>!.
+ *    <strong>Warning!</strong> This JavaScript extension requires some configuration parameters on the <a href="https://ludei.zendesk.com/hc/en-us">cloud compiler</a>!
  * </div>
  * @namespace Cocoon.Social.Facebook
  */
@@ -7599,11 +7743,13 @@ Cocoon.define("Cocoon.Social" , function(extension){
     return extension;
 });;/**
  * 
+ *
+ * <div class="alert alert-success">
+ *   Here you will find a demo about this namespace: <a href="https://github.com/ludei/cocoonjs-demos/tree/master/Multiplayer">Multiplayer demo</a>.
+ *</div>
+ * 
  * <div class="alert alert-warning">
- *    <strong>Warning!</strong> This JavaScript extension requires some configuration parameters on the <a href="https://ludei.zendesk.com/hc/en-us">cloud compiler</a>!.
- * </div>
- * <div class="alert alert-warning">
- *    <strong>Warning!</strong> You can find a complete example about how to use this extension <a href="https://cocoonjsservice.ludei.com/cocoonjslaunchersvr/demo-list/#Multiplayer">here</a>.
+ *    <strong>Warning!</strong> This JavaScript extension requires some configuration parameters on the <a href="https://ludei.zendesk.com/hc/en-us">cloud compiler</a>!
  * </div>
  * @namespace Cocoon.Multiplayer
  */
@@ -7995,7 +8141,7 @@ Cocoon.define("Cocoon.Multiplayer" , function(extension){
 });;/**
  * 
  * <div class="alert alert-warning">
- *    <strong>Warning!</strong> This JavaScript extension requires some configuration parameters on the <a href="https://ludei.zendesk.com/hc/en-us">cloud compiler</a>!.
+ *    <strong>Warning!</strong> This JavaScript extension requires some configuration parameters on the <a href="https://ludei.zendesk.com/hc/en-us">cloud compiler</a>!
  * </div>
  * @private
  * @namespace Cocoon.Multiplayer.LoopbackService
@@ -8168,12 +8314,13 @@ Cocoon.define("Cocoon.Multiplayer" , function(extension){
 
     return extension;
 });;/**
+ *
+ * <div class="alert alert-success">
+ *   Here you will find a demo about this namespace: <a href="https://github.com/ludei/cocoonjs-demos/tree/master/Multiplayer">Multiplayer demo</a>.
+ *</div>
  * 
  * <div class="alert alert-warning">
- *    <strong>Warning!</strong> This JavaScript extension requires some configuration parameters on the <a href="https://ludei.zendesk.com/hc/en-us">cloud compiler</a>!.
- * </div>
- * <div class="alert alert-warning">
- *    <strong>Warning!</strong> You can find a complete example about how to use this extension <a href="https://cocoonjsservice.ludei.com/cocoonjslaunchersvr/demo-list/#Multiplayer">here</a>.
+ *    <strong>Warning!</strong> This JavaScript extension requires some configuration parameters on the <a href="https://ludei.zendesk.com/hc/en-us">cloud compiler</a>!
  * </div>
  * @namespace Cocoon.Multiplayer.GooglePlayGames
  * @example 
@@ -8242,12 +8389,13 @@ Cocoon.define("Cocoon.Multiplayer" , function(extension){
 	return extension;
 });
 ;/**
- * 
+ *
+ * <div class="alert alert-success">
+ *   Here you will find a demo about this namespace: <a href="https://github.com/ludei/cocoonjs-demos/tree/master/Multiplayer">Multiplayer demo</a>.
+ *</div>
+ *  
  * <div class="alert alert-warning">
- *    <strong>Warning!</strong> This JavaScript extension requires some configuration parameters on the <a href="https://ludei.zendesk.com/hc/en-us">cloud compiler</a>!.
- * </div>
- * <div class="alert alert-warning">
- *    <strong>Warning!</strong> You can find a complete example about how to use this extension <a href="https://cocoonjsservice.ludei.com/cocoonjslaunchersvr/demo-list/#Multiplayer">here</a>.
+ *    <strong>Warning!</strong> This JavaScript extension requires some configuration parameters on the <a href="https://ludei.zendesk.com/hc/en-us">cloud compiler</a>!
  * </div>
  * @namespace Cocoon.Multiplayer.GameCenter
  * @example
