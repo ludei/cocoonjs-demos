@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>In App Purchases demo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no, minimal-ui">
+    <link rel="stylesheet" href="css/ratchet.min.css">
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/prettify.css">
+    <script src="js/prettify.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/ratchet.js"></script>
+    <script src="js/cocoon.js"></script>
+</head>
+
+<body>
+    <header class="bar bar-nav">
+        <a class="icon icon-left-nav pull-left" data-ignore="push" href="step-three.html" data-transition="slide-out"></a>
+        <h1 class="title">In App Purchases demo</h1>
+    </header>
+    <div class="content">
+        <div class="content-padded">
+            <div class="store_warning">
+                <img src="images/warning.png" style="width:50%;" />
+                <p>Hey! Listen!</p>
+                <p>This demo can't be used in the CocoonJS Launcher downloaded from Google Play/Amazon/App Store.</p>
+                <p>You have to compile this demo in the <a data-ignore="push" href="http://cloud.ludei.com">CocoonJS Cloud Compiler</a> or run it inside a custom launcher.</p>
+                <p>The CocoonJS Launcher downloaded from the store contains Ludei's configuration for in-apps purchases, ads, etc. That's why you need to run this demo inside a compiled app or a custom launcher.</p>
+                <p>Learn more at <a data-ignore="push" href="http://support.ludei.com">support.ludei.com</a>
+                </p>
+            </div>
+            <!-- Store available -->
+            <div class="store_available">
+                <div class="fetchbox">
+                    <p>Enter the product id you'd want to load from the store:</p>
+                    <input type="text" value="" id="fetchId">
+                    <button class="btn btn-primary btn-block btn-outlined" id="fetchIdBtn">Fetch product from store</button>
+                </div>
+                <div class="purchasebox">
+                    <p>Press 'purchase product' to purchase the item: {{item_id}}</p>
+                    <input type="hidden" value="" id="purchaseId">
+                    <button class="btn btn-primary btn-block" id="purchaseIdBtn">Purchase product</button>
+                </div>
+                <p><b>Console output:</b>
+                </p>
+                <div class="cmd">
+                    <ul>
+                        <li>$ Waiting fetching to start</li>
+                    </ul>
+                </div>
+            </div>
+            <!-- EOF Store available -->
+        </div>
+    </div>
+    <!-- /.content -->
+    <script type="text/javascript">
+        window.addEventListener("load", function() {
+
+            /**
+             * Fetch listeners
+             */
+            Cocoon.Store.on("load", {
+                started: function() {
+                    $(".cmd ul").prepend("<li>$ Loading products from the store...</li>");
+                },
+                success: function(productInfo) {
+
+                    if (productInfo.length === 0) {
+                        $(".cmd ul").prepend("<li>$ No products found.</li>");
+                        return;
+                    };
+
+                    $(".cmd ul").prepend("<li>$ Products correctly loaded: " + JSON.stringify(productInfo) + "</li>");
+                    $(".purchasebox").show(0);
+                    $(".fetchbox").hide(0);
+                    $("#purchaseId").val($("#fetchId").val());
+                },
+                error: function(errorMessage) {
+                    $(".cmd ul").prepend("<li>$ Can't load products: " + errorMessage + "</li>");
+                }
+            });
+
+            /**
+             * Purchase listeners
+             */
+            Cocoon.Store.on("purchase", {
+                started: function(productId) {
+                    $(".cmd ul").prepend("<li>$ Purchasing product " + productId + " started</li>");
+                },
+                success: function(productInfo) {
+                    $(".cmd ul").prepend("<li>$ Product purchased correctly: " + productInfo + "</li>");
+                },
+                verification: function(productId, errormsg) {
+                    if (errormsg) {
+                        $(".cmd ul").prepend("<li>$ Error: " + errormsg + "</li>");
+                        $(".cmd ul").prepend("<li>$ Can't purchase product: " + productId + "</li>");
+                    } else {
+                        // http://doc.ludei.com/3.0.0/Cocoon.Store.html#toc22
+                        $(".cmd ul").prepend("<li>$ Verification request received: " + productId + "</li>");
+                    }
+                },
+                error: function(productId, errormsg) {
+                    $(".cmd ul").prepend("<li>$ Error purchasing product: " + productId + ", Error: " + errormsg + "</li>");
+                }
+            });
+
+            var isMockActive = false;
+            
+            if (Cocoon.Store.getStoreType() === Cocoon.Store.StoreType.MOCK_STORE) {
+                isMockActive = true;
+            }
+
+            if (Cocoon.Store.canPurchase()) {
+                if (isMockActive) {
+                    $(".store_warning").show(0);
+                } else {
+                    $(".store_available").show(0);
+                }
+            } else {
+                $(".store_warning").show(0);
+            }
+
+            $("#fetchId").val("com.ludei.demos.store.removeads");
+
+            // Initialize store service
+            Cocoon.Store.initialize();
+            prettyPrint();
+        });
+
+        $(document).on("click", "#fetchIdBtn", function() {
+            var productId = $("#fetchId").val();
+            var products = [productId];
+            Cocoon.Store.loadProducts(products);
+        });
+        $(document).on("click", "#purchaseIdBtn", function() {
+            var productId = $("#purchaseId").val();
+            var products = [productId];
+            Cocoon.Store.purchase(productId);
+        });
+    </script>
+</body>
+
+</html>

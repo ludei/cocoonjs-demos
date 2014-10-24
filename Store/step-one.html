@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>In App Purchases demo</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no, minimal-ui">
+    <link rel="stylesheet" href="css/ratchet.min.css">
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/prettify.css">
+    <script src="js/prettify.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/ratchet.js"></script>
+</head>
+
+<body>
+    <header class="bar bar-nav">
+        <a class="icon icon-left-nav pull-left" data-ignore="push" href="wv.html" data-transition="slide-out"></a>
+        <button class="btn btn-link btn-nav pull-right">
+            <a data-ignore="push" href="step-two.html" data-transition="slide-in">Step 2 <span class="icon icon-right-nav"></span></a>
+        </button>
+        <h1 class="title">Setting up products</h1>
+    </header>
+    <div class="content">
+        <div class="content-padded">
+            <h3>Fetch products from store</h3>
+            <p>
+                The first thing you have to do is to initialize the store service.
+            </p>
+            <pre class="prettyprint">Cocoon.store.initialize();</pre>
+            <p>
+                After initializing the store service, you have to fetch the products you'd set up on Google Play/App Store/Amazon Store, first setup the callbacks
+            </p>
+            <pre class="prettyprint">Cocoon.Store.on("load",{ 
+    success: function(productInfo){ 
+      console.log(productInfo.productId); 
+    }, 
+    error: function(){ 
+      console.log("Cannot fetch products from store"); 
+    } 
+});</pre>
+            <p>
+                Then you can fetch the products
+            </p>
+            <pre class="prettyprint">Cocoon.Store.fetchProducts(["remove.ads"]);</pre>
+            <p>
+                After being notified through the <b>Cocoon.Store.on("load",{ success : ... });</b> event, you can buy the product by calling the <b>Cocoon.Store.purchaseProduct</b>.
+            </p>
+            <p>
+                That's all for now.
+            </p>
+            <a href="step-two.html" data-ignore="push" data-transition="slide-in">
+                <button class="btn btn-primary btn-block">Continue to step 2</button>
+            </a>
+        </div>
+    </div>
+    <!-- /.content -->
+    <script type="text/javascript">
+        window.onload = function() {
+            prettyPrint();
+        };
+    </script>
+</body>
+
+</html>
