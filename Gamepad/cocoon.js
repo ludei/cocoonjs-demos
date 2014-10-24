@@ -1,8 +1,8 @@
 /**
  * @fileOverview
  * Ludei's plugins are multiplatform Javascript APIs, that work in any of the three environments 
- * of CocoonJS: accelerated canvas, webview+ and system webview.
- * - Select the specific plugin bewlow to open the relevant documentation section.
+ * of CocoonJS: accelerated Canvas+, webview+ and system webview.
+ * - Select the specific plugin below to open the relevant documentation section.
  <ul>
     <li><a href="Cocoon.html">Cocoon</a></li>
     <li><a href="Cocoon.Ad.html">Ad</a></li>
@@ -32,7 +32,7 @@
  <a href="http://support.ludei.com/hc"><img src="img/cocoon-tools-2.png" /></a>
  <a href="https://cloud.ludei.com/"><img src="img/cocoon-tools-3.png" /></a>
  <a href="https://www.ludei.com/cocoonjs/how-to-use/"><img src="img/cocoon-tools-4.png" /></a>
- * @version 3.0.0
+ * @version 3.0.4
  */
 (function () {
     
@@ -697,7 +697,7 @@ Cocoon.define("Cocoon.App" , function(extension){
      * @memberof Cocoon.App
      * @name Cocoon.App.StorageType
      * @property {string} Cocoon.App.StorageType - The base object
-     * @property {string} Cocoon.App.StorageType.PORTRAIT Portrait
+     * @property {string} Cocoon.App.StorageType.APP_STORAGE The application storage.
      * @property {string} Cocoon.App.StorageType.INTERNAL_STORAGE Internal Storage
      * @property {string} Cocoon.App.StorageType.EXTERNAL_STORAGE External Storage
      * @property {string} Cocoon.App.StorageType.TEMPORARY_STORAGE Temporary Storage
@@ -714,6 +714,8 @@ Cocoon.define("Cocoon.App" , function(extension){
     extension.onActivated = new Cocoon.EventHandler("IDTK_APP", "App", "onactivated");
 
     extension.onSuspending = new Cocoon.EventHandler("IDTK_APP", "App", "onsuspending");
+
+    extension.onMemoryWarning = new Cocoon.EventHandler("IDTK_APP", "App", "onmemorywarning");
 
     var signal = new Cocoon.Signal.createSignal();
 
@@ -751,6 +753,19 @@ Cocoon.define("Cocoon.App" , function(extension){
      * });
      */
     signal.register("suspending", extension.onSuspending);
+
+    /**
+     * Allows to listen to memory warning notifications from the system
+     * It is strongly recommended that you implement this method and free up as much memory as possible by disposing of cached data objects, images on canvases that can be recreated.
+     * @event On memory warning
+     * @memberof Cocoon.App
+     * @example
+     * Cocoon.App.on("memorywarning", function(){
+     *  ...
+     * });
+     */
+     signal.register("memorywarning", extension.onMemoryWarning);
+
 
     extension.on = signal.expose();
     
@@ -936,15 +951,12 @@ Cocoon.define("Cocoon.App" , function(extension){
     * @example
     * Cocoon.App.hideTheWebView();
     */
-    extension.hideTheWebView = function()
-    {
-        if (Cocoon.App.nativeAvailable)
-        {
+    extension.hideTheWebView = function() {
+        if (Cocoon.App.nativeAvailable && navigator.isCocoonJS) {
             var javaScriptCodeToForward = "ext.IDTK_APP.makeCall('hide');";
             return Cocoon.App.forwardAsync(javaScriptCodeToForward);
         }
-        else if (!navigator.isCocoonJS)
-        {
+        else {
             checkEmulatedWebViewReady();
             Cocoon.App.EmulatedWebView.style.display = "none";
         }
@@ -1068,34 +1080,15 @@ Cocoon.define("Cocoon.Utils" , function(extension){
     };
 
     /**
-    * Marks a audio file to be used as music by the system. Cocoon, internally, differentiates among music files and sound files.
-    * Music files are usually bigger in size and longer in duration that sound files. There can only be just one music file 
-    * playing at a specific given time. The developer can mark as many files as he/she wants to be treated as music. When the corresponding
-    * HTML5 audio object is used, the system will automatically know how to treat the audio resource as music or as sound.
-    * Note that it is not mandatory to use this function. The system automatically tries to identify if a file is suitable to be treated as music
-    * or as sound by checking file size and duration thresholds. It is recommended, though, that the developer specifies him/herself what he/she considers
-    * to be music.
-    * @function markAsMusic
-    * @param {string} filePath File path to be marked as music
-    * @memberOf Cocoon.Utils
-    * @example
-    * Cocoon.Utils.markAsMusic("path/to/file.mp3");
-    */
-    extension.markAsMusic = function(audioFilePath)
-    {
-        if (Cocoon.nativeAvailable)
-        {
-           return extension.callNative("IDTK_APP", "addForceMusic", arguments);
-        }
-    };
-
-    /**
      * Captures a image of the screen synchronously and saves it to a file. Sync mode allows to capture the screen in the middle of a frame rendering.
      * @function captureScreen
      * @memberof Cocoon.Utils
      * @param {string} fileName Desired file name and format (png or jpg). If no value is passed, "capture.png" value is used by default
-     * @param {Cocoon.App.StorageType} storageType. The developer can specify the storage where it is stored. If no value is passed, the {@link Cocoon.Utils.StorageType.TMP_STORAGE} value is used by default.
-     * @param {Cocoon.App.StorageType} captureType. Optional value to choose capture type. [0: captures everything, 1: only captures cocoonjs surface 2: only captures system views]. @see Cocoon.Utils.CaptureType
+     * @param {Cocoon.App.StorageType} storageType The developer can specify the storage where it is stored. If no value is passed, the {@link Cocoon.Utils.StorageType.TMP_STORAGE} value is used by default.
+     * @param {Cocoon.App.StorageType} captureType Optional value to choose capture type. See {@link Cocoon.Utils.CaptureType}.
+     * - 0: Captures everything.
+     * - 1: Only captures cocoonjs surface.
+     * - 2: Only captures system views.
      * @throws exception if the image fails to be stored or there is another error.
      * @return The URL of the saved file.
      * @example
@@ -1139,6 +1132,39 @@ Cocoon.define("Cocoon.Utils" , function(extension){
         if (Cocoon.nativeAvailable)
         {
            return extension.callNative("IDTK_APP", "setDefaultAntialias", arguments);
+        }
+    };
+
+    /**
+     * Enables NPOT (not power of two) textures in Canvas+. 
+     * Canvas+ uses POT (power of two) textures by default. Enabling NPOT improves memory usage but may affect performance on old GPUs.
+     * @function setNPOTEnabled
+     * @memberof Cocoon.Utils
+     * @param {boolean} enabled true to enable NPOT Textures
+     * @example
+     * Cocoon.Utils.setNPOTEnabled(true);
+     */
+    extension.setNPOTEnabled = function (enabled) {
+        if (Cocoon.nativeAvailable) {
+            return window.ext.IDTK_APP.makeCall("setNPOTEnabled", enabled);
+        }
+    };
+
+    /**
+     * Sets a max memory threshold in Canvas+ for canvas2D contexts.
+     * If the maxMemory is enabled, CocoonJS checks the total amount of texture sizes (images and canvases). 
+     * When the memory size reaches the max memory threshold CocoonJS disposes least recently used textures until the memory fits the threshold. 
+     * It disposes textures used for JS Image objects (which can be reloaded later if needed).
+     * It doesn't dispose canvas objects because they cannot be reconstructed if they are used again in a render operation.
+     * @function setMaxMemory
+     * @memberof Cocoon.Utils
+     * @param {number} memoryInMBs max memory in megabytes
+     * @example
+     * Cocoon.Utils.setMaxMemory(75);
+     */
+    extension.setMaxMemory = function (memoryInMBs) {
+        if (Cocoon.nativeAvailable) {
+            return window.ext.IDTK_APP.makeCall("setMaxMemory", memoryInMBs);
         }
     };
 
@@ -1341,8 +1367,8 @@ Cocoon.define("Cocoon.Dialog" , function(extension){
         var properties = {
             title : "", 
             message : "", 
-            confirmText : "Ok", 
-            cancelText : "Cancel"
+            cancelText : "Cancel",
+            confirmText : "Ok"
         };
 
         var args = Cocoon.clone(properties,params);
@@ -1370,6 +1396,65 @@ Cocoon.define("Cocoon.Dialog" , function(extension){
             }, 0);
         }
     };
+
+    /**
+      * Shows a keyboard to receive user input. The developer has to process input events and render the resulting text.
+      * @param {object} param Object information.
+      * @param [param.type] {Cocoon.Dialog.keyboardType} Default value is Cocoon.Dialog.keyboardType.TEXT. The keyboard type to be used when the text has to be introduced.
+      * @param {callback} callbacks - <i>insertText</i>, <i>deleteBackward</i>, <i>done</i>, <i>cancel</i> callbacks called when the user clicks a key, confirms or cancels the keyboard session.
+      * @memberOf Cocoon.Dialog
+      * @function showKeyboard
+      * @example 
+      * var text = "";
+      * Cocoon.Dialog.showKeyboard({ 
+      *     type : Cocoon.Dialog.keyboardType.TEXT,
+      * },{
+      *     insertText: function(inserted) { text+= inserted; console.log(text);}
+      *     deleteBackward: function() {text = text.slice(0, text.length -1); console.log(text);}
+      *     done : function(){ console.log("user clicked done key") },
+      *     cancel : function(){ console.log("user dismissed keyboard") }
+      * });
+      */
+    extension.showKeyboard = function(params, callbacks) {
+        params = params || {};
+        params.type = params.type || Cocoon.Dialog.keyboardType.TEXT;
+        var insertCallback = callbacks && callbacks.insertText;
+        var deleteCallback = callbacks && callbacks.deleteBackward;
+        var doneCallback = callbacks && callbacks.done;
+        var cancelCallback =  callbacks && callbacks.cancel;
+
+        if (Cocoon.nativeAvailable) {
+            Cocoon.callNative("IDTK_APP", "showKeyboard", 
+                [params, insertCallback, deleteBackward, doneCallback, cancelCallback], true);
+        }
+    };
+
+    /**
+      * Dimisses a keyboard which was previusly shown by {@link Cocoon.Dialog.showKeyboard}
+      *
+      * @memberOf Cocoon.Dialog
+      * @function dismissKeyboard
+      * @example 
+      * var text = "";
+      * Cocoon.Dialog.showKeyboard({ 
+      *     type : Cocoon.Dialog.keyboardType.TEXT,
+      * },{
+      *     insertText: function(inserted) { 
+      *        if (inserted === "A") { //Custom keyboard hide
+      *             Cocoon.Dialog.dimissKeyboard();
+      *        }
+      *        text+= inserted; console.log(text); 
+      *     }
+      *     deleteBackward: function() {text = text.slice(0, text.length -1); console.log(text);}
+      *     done : function(){ console.log("user clicked done key") },
+      *     cancel : function(){ console.log("user dismissed keyboard") }
+      * });
+      */
+    extension.dismissKeyboard = function() {
+        if (Cocoon.nativeAvailable) {
+            Cocoon.callNative("IDTK_APP", "dismissKeyboard", null, true);
+        }
+    }
 
     /**
      * Allows listening to events called when the text dialog is finished by accepting it's content.
@@ -1538,7 +1623,7 @@ Cocoon.define("Cocoon.WebView" , function(extension){
 
     window.addEventListener("load", function()
     {
-        Cocoon.Proxify.console();
+        Cocoon.App.proxifyConsole();
 
         // Only if we are completely outside CocoonJS (or CocoonJS' webview),
         // setup event forwarding from the webview (iframe) to Cocoon.
@@ -2657,12 +2742,10 @@ Cocoon.define("Cocoon.Widget" , function(extension){
     * });
     */
 
-	navigator.getMedia = ( navigator.getUserMedia ||
-                       navigator.webkitGetUserMedia ||
-                       navigator.mozGetUserMedia ||
-                       navigator.msGetUserMedia) || {};
-
-	navigator.getMedia.cocoonStream = {};
+    navigator.getUserMedia_ = ( navigator.getUserMedia ||
+                                navigator.webkitGetUserMedia ||
+                                navigator.mozGetUserMedia ||
+                                navigator.msGetUserMedia);
     
     /**
     * 
@@ -2739,11 +2822,11 @@ Cocoon.define("Cocoon.Widget" , function(extension){
 	*/
 	extension.getNumberOfCameras = function()
 	{
-		if (Cocoon.nativeAvailable)
+		if (Cocoon.nativeAvailable && navigator.isCocoonJS)
 		{
 			return Cocoon.callNative("IDTK_SRV_CAMERA", "getNumberOfCameras", arguments);
 		}else{
-			return (navigator.getMedia) ? 1 : 0;
+			return (navigator.getUserMedia_) ? 1 : 0;
 		}
 	};
 
@@ -2757,7 +2840,7 @@ Cocoon.define("Cocoon.Widget" , function(extension){
 	*/
 	extension.getAllCamerasInfo = function()
 	{
-		if (Cocoon.nativeAvailable)
+		if (Cocoon.nativeAvailable && navigator.isCocoonJS)
 		{
 			return Cocoon.callNative("IDTK_SRV_CAMERA", "getAllCamerasInfo", arguments);
 		}
@@ -2774,7 +2857,7 @@ Cocoon.define("Cocoon.Widget" , function(extension){
 	*/
 	extension.getCameraInfoByIndex = function(cameraIndex)
 	{
-		if (Cocoon.nativeAvailable)
+		if (Cocoon.nativeAvailable && navigator.isCocoonJS)
 		{
 			return Cocoon.callNative("IDTK_SRV_CAMERA", "getCameraInfoByIndex", arguments);
 		}
@@ -2789,7 +2872,7 @@ Cocoon.define("Cocoon.Widget" , function(extension){
 	*/
 	extension.getCameraInfoByType = function(cameraType)
 	{
-		if (Cocoon.nativeAvailable)
+		if (Cocoon.nativeAvailable && navigator.isCocoonJS)
 		{
 			return Cocoon.callNative("IDTK_SRV_CAMERA", "getCameraInfoByType", arguments);
 		}
@@ -2833,17 +2916,16 @@ Cocoon.define("Cocoon.Widget" , function(extension){
 				cameraIndex : 0, 
 				width : 50, 
 				height : 50,
-				frameRate : 25,
-				imageFormat : extension.CaptureFormatType.JPEG
+				frameRate : 25
 			};
 
 			var args = Cocoon.clone(properties,params);
-			var img = Cocoon.callNative("IDTK_SRV_CAMERA", "startCapturing", arguments);
+			var img = Cocoon.callNative("IDTK_SRV_CAMERA", "startCapturing", args);
 			
 			if(Boolean(img)) { params.success(img); }else{ params.error(false); }
             
 		}else{
-			navigator.getMedia( {
+			navigator.getUserMedia_( {
               video:true, audio:false
             },    
             function(stream) {
@@ -2864,7 +2946,7 @@ Cocoon.define("Cocoon.Widget" , function(extension){
 	*/
 	extension.stop = function(cameraIndex)
 	{
-		if (Cocoon.nativeAvailable)
+		if (Cocoon.nativeAvailable && navigator.isCocoonJS)
 		{
 			return Cocoon.callNative("IDTK_SRV_CAMERA", "stopCapturing", arguments);
 		}
@@ -2879,7 +2961,7 @@ Cocoon.define("Cocoon.Widget" , function(extension){
 	*/
 	extension.isCapturing = function(cameraIndex)
 	{
-		if (Cocoon.nativeAvailable)
+		if (Cocoon.nativeAvailable && navigator.isCocoonJS)
 		{
 			return Cocoon.callNative("IDTK_SRV_CAMERA", "isCapturing", arguments);
 		}
@@ -4269,11 +4351,11 @@ Cocoon.define("Cocoon.Notification" , function(extension){
 		expirationTimeInterval : 0
 		};
 
-        for (var prop in properties) {
-            if (!params[prop]) {
-                params[prop] = properties[prop];
-            }
-        }
+		for (var prop in properties) {
+			if (!params[prop]) {
+				params[prop] = properties[prop];
+			}
+		}
 
 		return params;
 	};
