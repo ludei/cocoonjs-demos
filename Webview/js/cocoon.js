@@ -842,16 +842,18 @@ Cocoon.define("Cocoon.App" , function(extension){
     * @function loadInTheWebView
     * @memberOf Cocoon.App
     * @param {string} path The path to the resource. It can be a remote URL or a path to a local file.
-    * @param {callbacks} cb  An object containing two callbacks to manage the load event, { success : callback, error: callback }.
     * @param {Cocoon.App.StorageType} [storageType] An optional parameter to specify at which storage in the device the file path is stored. By default, APP_STORAGE is used.
     * @example
-    * Cocoon.App.loadInTheWebView("wv.html", {
-    * success : function(){
-    *     Cocoon.WebView.show(0, 0, window.innerWidth * window.devicePixelratio, window.innerHeight * window.devicePixelRatio );
-    * },
-    * error : function(){
-    *     ...
+    * Cocoon.App.WebView.on("load", {
+    *   success : function(){
+    *     Cocoon.App.showTheWebView();
+    *   },
+    *   error : function(){
+    *     console.log("Cannot show the Webview for some reason :/");
+    *     console.log(JSON.stringify(arguments));
+    *   }
     * });
+    * Cocoon.App.loadInTheWebView("wv.html");
     */
     extension.loadInTheWebView = function(path, storageType)
     {
@@ -1623,7 +1625,7 @@ Cocoon.define("Cocoon.WebView" , function(extension){
 
     window.addEventListener("load", function()
     {
-        Cocoon.App.proxifyConsole();
+        
 
         // Only if we are completely outside CocoonJS (or CocoonJS' webview),
         // setup event forwarding from the webview (iframe) to Cocoon.
@@ -6700,21 +6702,32 @@ Cocoon.define("Cocoon.Social" , function(extension){
     * @memberof Cocoon.Social.GameCenter
     * @name Cocoon.Social.GameCenter.Score
     * @property {object} Cocoon.Social.GameCenter.Score - The object itself
-    * @property {number} Cocoon.Social.GameCenter.Score.value The score value as a 64bit integer.
-    * @property {string} Cocoon.Social.GameCenter.Score.category Leaderboard category.
-    * @property {string} Cocoon.Social.GameCenter.Score.playerID The identifier of the player that recorded the score.
+    * @property {string} Cocoon.Social.GameCenter.Score.userID The identifier of the player that recorded the score.
+    * @property {number} Cocoon.Social.GameCenter.Score.score The score value as a 64bit integer.
+    * @property {string} Cocoon.Social.GameCenter.Score.userName The name of the user.
+    * @property {string} Cocoon.Social.GameCenter.Score.imageURL imageURL The url of the user image.
+    * @property {string} Cocoon.Social.GameCenter.Score.leaderboardID Leaderboard category.
     * @property {number} Cocoon.Social.GameCenter.Score.rank The rank of the player within the leaderboard.
     */
-    extension.GameCenter.Score = function(value,category) {
+    extension.GameCenter.Score = function(userID, score, userName, imageURL, leaderboardID, originalScoreObject)
+    {
 
-        this.value = value;
+        this.userID = userID;
 
-        this.category = category;
+        this.score = score || 0;
 
-        this.playerID = "";
+        this.userName = userName;
 
-        this.rank = 0;
-    }
+        this.imageURL = imageURL;
+
+        this.leaderboardID = leaderboardID;
+
+        this.rank = originalScoreObject.rank;
+
+        this.originalScoreObject = originalScoreObject;
+
+        return this;
+    };
 
 
     /**
@@ -6854,7 +6867,7 @@ Cocoon.define("Cocoon.Social" , function(extension){
                     gcScore = response.scores[0];
                 else if (response && response.localPlayerScore)
                     gcScore = response.localPlayerScore;
-                var loadedScore = gcScore ? new Cocoon.Social.GameCenter.Score(gcScore.playerID, gcScore.value, "","", gcScore.category) : null;
+                var loadedScore = gcScore ? new Cocoon.Social.GameCenter.Score(gcScore.playerID, gcScore.value, "","", gcScore.category, gcScore) : null;
                 callback(loadedScore,error);
             }, query);
         },
