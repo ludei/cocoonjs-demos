@@ -20,7 +20,7 @@
 			
 			</div> <!-- #data -->   		
     		
-    		<p id="close"><a href="#" onclick="CocoonJS.WebDialog.close(); return false;">Close</a></p>
+    		<p id="close"><a href="#" onclick="(CocoonJS.WebDialog.close) ? CocoonJS.WebDialog.close() : Cocoon.Widget.WebDialog.close(); return false;">Close</a>
     	
     	</div> <!-- /#container -->
 
