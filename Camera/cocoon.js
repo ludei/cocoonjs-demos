@@ -48,7 +48,7 @@
      * @example
      * console.log(Cocoon.version);
      */
-    Cocoon.version = "3.0.0";
+    Cocoon.version = "3.0.4";
     
     /**
      * Is the native environment available? true if so.
@@ -1046,7 +1046,7 @@ Cocoon.define("Cocoon.Utils" , function(extension){
     */
     extension.logMemoryInfo = function()
     {
-        if (Cocoon.nativeAvailable)
+        if (Cocoon.nativeAvailable && navigator.isCocoonJS)
         {
             return extension.callNative("IDTK_APP", "logMemoryInfo", arguments);
         }
@@ -1075,7 +1075,7 @@ Cocoon.define("Cocoon.Utils" , function(extension){
     */
     extension.textureReduction = function(sizeThreshold, applyTo, forbidFor)
     {
-        if (Cocoon.nativeAvailable)
+        if (Cocoon.nativeAvailable && navigator.isCocoonJS)
         {
             extension.callNative("IDTK_APP", "setDefaultTextureReducerThreshold", arguments);
         }
@@ -1131,7 +1131,7 @@ Cocoon.define("Cocoon.Utils" , function(extension){
     */
     extension.setAntialias = function(enable)
     {
-        if (Cocoon.nativeAvailable)
+        if (Cocoon.nativeAvailable && navigator.isCocoonJS)
         {
            return extension.callNative("IDTK_APP", "setDefaultAntialias", arguments);
         }
@@ -1147,7 +1147,7 @@ Cocoon.define("Cocoon.Utils" , function(extension){
      * Cocoon.Utils.setNPOTEnabled(true);
      */
     extension.setNPOTEnabled = function (enabled) {
-        if (Cocoon.nativeAvailable) {
+        if (Cocoon.nativeAvailable && navigator.isCocoonJS) {
             return window.ext.IDTK_APP.makeCall("setNPOTEnabled", enabled);
         }
     };
@@ -1165,7 +1165,7 @@ Cocoon.define("Cocoon.Utils" , function(extension){
      * Cocoon.Utils.setMaxMemory(75);
      */
     extension.setMaxMemory = function (memoryInMBs) {
-        if (Cocoon.nativeAvailable) {
+        if (Cocoon.nativeAvailable && navigator.isCocoonJS) {
             return window.ext.IDTK_APP.makeCall("setMaxMemory", memoryInMBs);
         }
     };
@@ -1215,7 +1215,7 @@ Cocoon.define("Cocoon.Utils" , function(extension){
     * Cocoon.Utils.setTextCacheSize(32);
     */
     extension.setTextCacheSize = function (size) {
-        if (Cocoon.nativeAvailable) {
+        if (Cocoon.nativeAvailable && navigator.isCocoonJS) {
             return Cocoon.callNative("IDTK_APP", "setTextCacheSize", arguments);
         }
     }
@@ -1274,9 +1274,9 @@ Cocoon.define("Cocoon.Dialog" , function(extension){
       * @example 
       * Cocoon.Dialog.prompt({ 
       *     title : "title",
-      *     message : "message",
+      *     message : "message"
       * },{
-      *     success : function(){ ... },
+      *     success : function(text){ ... },
       *     cancel : function(){ ... }
       * });
       */
@@ -1427,7 +1427,7 @@ Cocoon.define("Cocoon.Dialog" , function(extension){
 
         if (Cocoon.nativeAvailable) {
             Cocoon.callNative("IDTK_APP", "showKeyboard", 
-                [params, insertCallback, deleteBackward, doneCallback, cancelCallback], true);
+                [params, insertCallback, deleteCallback, doneCallback, cancelCallback], true);
         }
     };
 
@@ -1454,7 +1454,7 @@ Cocoon.define("Cocoon.Dialog" , function(extension){
       */
     extension.dismissKeyboard = function() {
         if (Cocoon.nativeAvailable) {
-            Cocoon.callNative("IDTK_APP", "dismissKeyboard", null, true);
+            Cocoon.callNative("IDTK_APP", "dismissKeyboard", [], true);
         }
     }
 
@@ -1500,7 +1500,8 @@ Cocoon.define("Cocoon.Dialog" , function(extension){
 
     return extension;
 
-});;/**
+});
+;/**
 * This namespace represents all functionalities available in the WebView environment.
 *
 * <div class="alert alert-success">
@@ -1509,15 +1510,15 @@ Cocoon.define("Cocoon.Dialog" , function(extension){
 *
 * @namespace Cocoon.WebView
 * @example
-* Cocoon.App.loadInTheWebView("wv.html", {
-*      success: function() {
-*          Cocoon.App.showTheWebView();
-*      },
-*      error: function() {
-*          console.log("Cannot show the Webview for some reason :/");
-*          console.log(JSON.strigify(arguments));
-*      }
-*  });
+* Cocoon.WebView.on("load",{
+*   success : function(){
+*       Cocoon.App.showTheWebView();
+*   },
+*   error : function(){
+*        console.log("Cannot show the Webview for some reason :/");
+*   }
+* });
+* Cocoon.App.loadInTheWebView("WV.html");
 */
 
 Cocoon.define("Cocoon.WebView" , function(extension){
@@ -3494,7 +3495,7 @@ Cocoon.define("Cocoon.Widget" , function(extension){
      */
 	signal.register("shown", extension.onFullScreenShown);
 	/**
-     * Allows to listen to events called when a banner is hidden.
+     * Allows to listen to events called when a full screen ad is hidden.
      * @event On interstitial hidden
      * @memberof Cocoon.Ad
      * @example
@@ -3725,8 +3726,8 @@ Cocoon.define("Cocoon.Widget" , function(extension){
         var args = Cocoon.clone(properties,params);
 
 		Cocoon.Store.requestInitialization({ 
-			sandbox: args.sandbox,
-			managed: args.managed
+			sandbox: args[0],
+			managed: args[1]
 		});
 		
 		Cocoon.Store.start();
