@@ -9,21 +9,21 @@
     <script src="js/cocoon.js"></script>
 
     <script>
-      window.onload = function(){
-        
-        //Store demo starts in portrait by default.
-        Cocoon.Device.setOrientation(Cocoon.Device.Orientations.PORTRAIT);
+    window.onload = function(){   
+      //Store demo starts in portrait by default.
+      Cocoon.Device.setOrientation(Cocoon.Device.Orientations.PORTRAIT);
 
-        Cocoon.App.loadInTheWebView("wv.html?_d=" + (new Date()) ,{
-          success : function(){
-            Cocoon.App.showTheWebView();
-          },
-          error : function(){
-            console.log("Cannot show the Webview for some reason :/");
-            console.log(arguments);
-          }
-        });
-      };
+      Cocoon.App.WebView.on("load",{
+        success : function(){
+          Cocoon.App.showTheWebView();
+        },
+        error : function(){
+          console.log("Cannot show the Webview for some reason :/");
+          console.log(JSON.stringify(arguments));
+        }
+      });
+      Cocoon.App.loadInTheWebView("wv.html");
+    }
     </script>
   </body>
 </html>
