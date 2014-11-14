@@ -7,22 +7,26 @@
   </head>
   <body>
     <script src="js/cocoon.js"></script>
-
     <script>
     window.onload = function(){   
       //Store demo starts in portrait by default.
       Cocoon.Device.setOrientation(Cocoon.Device.Orientations.PORTRAIT);
 
-      Cocoon.App.WebView.on("load",{
-        success : function(){
-          Cocoon.App.showTheWebView();
-        },
-        error : function(){
-          console.log("Cannot show the Webview for some reason :/");
-          console.log(JSON.stringify(arguments));
-        }
-      });
-      Cocoon.App.loadInTheWebView("wv.html");
+      if(navigator.isCocoonJS){
+          Cocoon.App.WebView.on("load",{
+              success : function(){
+                  Cocoon.App.showTheWebView();
+              },
+              error : function(){
+                  console.log("Error loading wv.");
+                  console.log(JSON.stringify(arguments));
+              }
+          });
+          Cocoon.App.loadInTheWebView("wv.html");
+      }
+      else {
+          Cocoon.App.load("wv.html");
+      }
     };
     </script>
   </body>

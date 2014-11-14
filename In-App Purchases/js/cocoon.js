@@ -1316,17 +1316,19 @@ Cocoon.define("Cocoon.Dialog" , function(extension){
         var args = Cocoon.clone(properties,params);
 
         var succedListener = function(){
-            Cocoon.Dialog.onTextDialogCancelled.removeEventListenerOnce(errorListener);
+            Cocoon.Dialog.onTextDialogCancelled.removeEventListener(errorListener);
+            Cocoon.Dialog.onTextDialogFinished.removeEventListener(succedListener);
             callbacks.success.apply(window , Array.prototype.slice.call(arguments));
         };
-        
+  
         var errorListener = function(){
-            Cocoon.Dialog.onTextDialogFinished.removeEventListenerOnce(succedListener);
+            Cocoon.Dialog.onTextDialogCancelled.removeEventListener(errorListener);
+            Cocoon.Dialog.onTextDialogFinished.removeEventListener(succedListener);
             callbacks.cancel.apply(window , Array.prototype.slice.call(arguments));
         };
 
-        Cocoon.Dialog.onTextDialogCancelled.addEventListenerOnce(errorListener);
-        Cocoon.Dialog.onTextDialogFinished.addEventListenerOnce(succedListener);
+        Cocoon.Dialog.onTextDialogCancelled.addEventListener(errorListener);
+        Cocoon.Dialog.onTextDialogFinished.addEventListener(succedListener);
 
         if (Cocoon.App.nativeAvailable) {
             return Cocoon.callNative("IDTK_APP", "showTextDialog", args, true);
