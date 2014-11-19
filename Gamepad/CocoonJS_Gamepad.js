@@ -1,24 +1,23 @@
 (function () {
-    // The CocoonJS must exist before creating the extension.
-    if (typeof window.CocoonJS === 'undefined' || window.CocoonJS === null) throw("The CocoonJS object must exist and be valid before creating any extension object.");
+    if (typeof window.Cocoon === 'undefined' || window.Cocoon === null) throw("The Cocoon object must exist and be valid before creating any extension object.");
 
     /**
      * This namespace represents the functionalities related to OUYA android gaming control.
      * @namespace
      */
-    CocoonJS.Gamepad = {};
+    Cocoon.Gamepad = {};
 
-    CocoonJS.Gamepad.nativeExtensionObjectAvailable = CocoonJS.nativeExtensionObjectAvailable && typeof window.ext.Gamepad !== 'undefined';
+    Cocoon.Gamepad.nativeExtensionObjectAvailable = Cocoon.nativeAvailable && typeof window.ext.Gamepad !== 'undefined';
 
     /**
     * This enumeration simplifies the access to the indices for button and axis elements according to the HTML5 gamepad standard API specification.
     * You may use these values to access the buttons and axes arrays inside the Gamepad objects, according to the W3C gamepad API specification.
     * For example: 
-    * gamepad.button[CocoonJS.Gamepad.BUTTON_LEFT_TRIGGER]; 
-    * gamepad.axes[CocoonJS.Gamepad.AXIS_LEFT_JOYSTICK_X]; 
+    * gamepad.button[Cocoon.Gamepad.BUTTON_LEFT_TRIGGER]; 
+    * gamepad.axes[Cocoon.Gamepad.AXIS_LEFT_JOYSTICK_X]; 
     * @namespace
     */
-    CocoonJS.Gamepad.Indices = {
+    Cocoon.Gamepad.Indices = {
         /**
         * Represents the button 0 (the A on the XBOX controller, the O on the OUYA controller)
         */
