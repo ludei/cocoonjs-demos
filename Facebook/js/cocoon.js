@@ -32,7 +32,7 @@
  <a href="http://support.ludei.com/hc"><img src="img/cocoon-tools-2.png" /></a>
  <a href="https://cloud.ludei.com/"><img src="img/cocoon-tools-3.png" /></a>
  <a href="https://www.ludei.com/cocoonjs/how-to-use/"><img src="img/cocoon-tools-4.png" /></a>
- * @version 3.0.4
+ * @version 3.0.5
  */
 (function () {
     
@@ -48,7 +48,7 @@
      * @example
      * console.log(Cocoon.version);
      */
-    Cocoon.version = "3.0.4";
+    Cocoon.version = "3.0.5";
     
     /**
      * Is the native environment available? true if so.
@@ -697,7 +697,7 @@ Cocoon.define("Cocoon.App" , function(extension){
      * @memberof Cocoon.App
      * @name Cocoon.App.StorageType
      * @property {string} Cocoon.App.StorageType - The base object
-     * @property {string} Cocoon.App.StorageType.APP_STORAGE The application storage.
+     * @property {string} Cocoon.App.StorageType.APP_STORAGE The application storage
      * @property {string} Cocoon.App.StorageType.INTERNAL_STORAGE Internal Storage
      * @property {string} Cocoon.App.StorageType.EXTERNAL_STORAGE External Storage
      * @property {string} Cocoon.App.StorageType.TEMPORARY_STORAGE Temporary Storage
@@ -1048,7 +1048,7 @@ Cocoon.define("Cocoon.Utils" , function(extension){
     {
         if (Cocoon.nativeAvailable && navigator.isCocoonJS)
         {
-            return extension.callNative("IDTK_APP", "logMemoryInfo", arguments);
+            return Cocoon.callNative("IDTK_APP", "logMemoryInfo", arguments);
         }
     };
 
@@ -1077,7 +1077,29 @@ Cocoon.define("Cocoon.Utils" , function(extension){
     {
         if (Cocoon.nativeAvailable && navigator.isCocoonJS)
         {
-            extension.callNative("IDTK_APP", "setDefaultTextureReducerThreshold", arguments);
+            return Cocoon.callNative("IDTK_APP", "setDefaultTextureReducerThreshold", arguments);
+        }
+    };
+
+    /**
+    * Marks a audio file to be used as music by the system. Cocoon, internally, differentiates among music files and sound files.
+    * Music files are usually bigger in size and longer in duration that sound files. There can only be just one music file 
+    * playing at a specific given time. The developer can mark as many files as he/she wants to be treated as music. When the corresponding
+    * HTML5 audio object is used, the system will automatically know how to treat the audio resource as music or as sound.
+    * Note that it is not mandatory to use this function. The system automatically tries to identify if a file is suitable to be treated as music
+    * or as sound by checking file size and duration thresholds. It is recommended, though, that the developer specifies him/herself what he/she considers
+    * to be music.
+    * @function markAsMusic
+    * @param {string} filePath File path to be marked as music
+    * @memberOf Cocoon.Utils
+    * @example
+    * Cocoon.Utils.markAsMusic("path/to/file.mp3");
+    */
+    extension.markAsMusic = function(audioFilePath)
+    {
+        if (Cocoon.nativeAvailable)
+        {
+           return Cocoon.callNative("IDTK_APP", "addForceMusic", arguments);
         }
     };
 
@@ -1087,18 +1109,19 @@ Cocoon.define("Cocoon.Utils" , function(extension){
      * @memberof Cocoon.Utils
      * @param {string} fileName Desired file name and format (png or jpg). If no value is passed, "capture.png" value is used by default
      * @param {Cocoon.App.StorageType} storageType The developer can specify the storage where it is stored. If no value is passed, the {@link Cocoon.Utils.StorageType.TMP_STORAGE} value is used by default.
-     * @param {Cocoon.App.StorageType} captureType Optional value to choose capture type. See {@link Cocoon.Utils.CaptureType}.
+     * @param {Cocoon.Utils.CaptureType} captureType Optional value to choose capture type. See {@link Cocoon.Utils.CaptureType}.
      * - 0: Captures everything.
      * - 1: Only captures cocoonjs surface.
      * - 2: Only captures system views.
+     * @param {boolean} saveToGallery Optional value to specify if the capture image should be stored in the device image gallery or not.
      * @throws exception if the image fails to be stored or there is another error.
      * @return The URL of the saved file.
      * @example
      * Cocoon.Utils.captureScreen("myScreenshot.png");
      */
-    extension.captureScreen = function (fileName, storageType, captureType) {
+    extension.captureScreen = function (fileName, storageType, captureType, saveToGallery) {
         if (Cocoon.nativeAvailable) {
-            return window.ext.IDTK_APP.makeCall("captureScreen", fileName, storageType, captureType);
+            return Cocoon.callNative("IDTK_APP", "captureScreen", arguments);
         }
     };
 
@@ -1109,16 +1132,20 @@ Cocoon.define("Cocoon.Utils" , function(extension){
      * @memberof Cocoon.Utils
      * @param {string} fileName Desired file name and format (png or jpg). If no value is passed, "capture.png" value is used by default
      * @param {Cocoon.App.StorageType} storageType The developer can specify the storage where it is stored. If no value is passed, the {@see Cocoon.Utils.StorageType.TMP_STORAGE} value is used by default.
-     * @param {Cocoon.App.StorageType} captureType Optional value to choose capture type. [0: captures everything, 1: only captures cocoonjs surface, 2: only captures system views]. @see Cocoon.Utils.CaptureType
+     * @param {Cocoon.Utils.CaptureType} captureType Optional value to choose capture type. See {@link Cocoon.Utils.CaptureType}.
+     * - 0: Captures everything.
+     * - 1: Only captures cocoonjs surface.
+     * - 2: Only captures system views.
+     * @param {boolean} saveToGallery Optional value to specify if the capture image should be stored in the device image gallery or not.
      * @param {function} callback Response callback, check the error property to monitor errors. Check the 'url' property to get the URL of the saved Image
      * @example
-     * Cocoon.Utils.captureScreenAsync("myScreenshot.png", Cocoon.Utils.StorageType.TMP_STORAGE, Cocoon.Utils.CaptureType.EVERYTHING, function(){
+     * Cocoon.Utils.captureScreenAsync("myScreenshot.png", Cocoon.Utils.StorageType.TMP_STORAGE, false, Cocoon.Utils.CaptureType.EVERYTHING, function(){
      * ...
      * });
      */
-    extension.captureScreenAsync = function (fileName, storageType, captureType, callback) {
+    extension.captureScreenAsync = function (fileName, storageType, captureType, saveToGallery, callback) {
         if (Cocoon.nativeAvailable) {
-            window.ext.IDTK_APP.makeCallAsync("captureScreen", fileName, storageType, captureType, callback);
+            Cocoon.callNative("IDTK_APP", "captureScreen", arguments, true);
         }
     };
 
@@ -1126,6 +1153,7 @@ Cocoon.define("Cocoon.Utils" , function(extension){
     * Activates or deactivates the antialas functionality from the Cocoon rendering.
     * @function setAntialias
     * @memberOf Cocoon.Utils
+    * @param {boolean} enable A boolean value to enable (true) or disable (false) antialias.
     * @example
     * Cocoon.Utils.setAntialias(true);
     */
@@ -1133,7 +1161,23 @@ Cocoon.define("Cocoon.Utils" , function(extension){
     {
         if (Cocoon.nativeAvailable && navigator.isCocoonJS)
         {
-           return extension.callNative("IDTK_APP", "setDefaultAntialias", arguments);
+           return Cocoon.callNative("IDTK_APP", "setDefaultAntialias", arguments);
+        }
+    };
+
+    /**
+    * Activates or deactivates the webgl functionality from the Cocoon Canvas+ rendering.
+    * @function setWebGLEnabled
+    * @memberOf Cocoon.Utils
+    * @param {boolean} enabled A boolean value to enable (true) or disable (false) webgl in Canvas+.
+    * @example
+    * Cocoon.Utils.setWebGLEnabled(true);
+    */
+    extension.setWebGLEnabled = function(enabled)
+    {
+        if (Cocoon.nativeAvailable)
+        {
+           return Cocoon.callNative("IDTK_APP", "setDefaultAntialias", arguments);
         }
     };
 
@@ -1196,7 +1240,7 @@ Cocoon.define("Cocoon.Utils" , function(extension){
     */
     extension.existsPath = function(path, storageType) {
         if (Cocoon.nativeAvailable){
-            return window.ext.IDTK_APP.makeCall("existsPath", path, storageType);
+            return Cocoon.callNative("IDTK_APP", "existsPath", arguments);
         }
         return false;
     }
@@ -3462,8 +3506,10 @@ Cocoon.define("Cocoon.Widget" , function(extension){
      * Allows to listen to events called when a banner is ready.
      * @event On banner ready
      * @memberof Cocoon.Ad
+     * @param {number} width The banner width
+     * @param {number} height The banner height
      * @example
-     * Cocoon.Ad.banner.on("ready", function(){
+     * Cocoon.Ad.banner.on("ready", function(width, height){
      *  ...
      * });
      */
@@ -7266,7 +7312,14 @@ Cocoon.define("Cocoon.Social" , function(extension){
         */
         getPermissions: function(callback) {
             this.api('me/permissions', function(response) {
-                callback(response.data && response.data[0] ? response.data[0] : {});
+                var result = {};
+                var data = response && response.data ? response.data : [];
+                for (var i = 0; i < data.length; ++i) {
+                    if (data[i].status === "granted") {
+                        result[data[i].permission] = true;
+                    }
+                }
+                callback(result);
             });
         },
 
@@ -7443,12 +7496,12 @@ Cocoon.define("Cocoon.Social" , function(extension){
         isLoggedIn: function() {
             return this.fb._currentSession && this.fb._currentSession.status === "connected";
         },
-        login : function(callback) {
+        login : function(callback, options) {
             var me = this;
             this.fb.login(function(response){
                 if (callback)
                     callback(me.isLoggedIn(), response.error);
-            });
+            }, options);
         },
         logout: function(callback) {
             this.fb.logout(function(response){
@@ -7527,17 +7580,26 @@ Cocoon.define("Cocoon.Social" , function(extension){
                 var me = this;
                 this.fb.getPermissions(function(perms){
                     me.currentPermissions = perms;
-                    if (perms)
+                    if (perms) {
                         me.preparePublishAction(callback);
+                    }
+                    else {
+                        callback(false);
+                    }
                 });
             }
             else if (this.currentPermissions.publish_actions) {
                 callback(true);
             }
             else{
-                this.currentPermissions = null;
+                this.currentPermissions = this.currentPermissions | {};
+                var me = this;
                 this.fb.requestAdditionalPermissions("publish", "publish_actions", function(response) {
-                     callback(response.error ? false : true);
+                    var perms = response && response.authResponse ? response.authResponse.permissions : [];
+                    for (var i = 0; i < perms.length; ++i) {
+                        me.currentPermissions[perms[i]] = true;
+                    }
+                    callback(response.error ? false : true);
                 });
             }
 

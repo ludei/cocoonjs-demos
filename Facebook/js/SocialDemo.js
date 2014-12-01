@@ -194,7 +194,7 @@
                 else {
                     console.log("login cancelled");
                 }
-            });
+            },{scope:'user_friends'});
         }
     }
 
