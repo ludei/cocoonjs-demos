@@ -5,11 +5,11 @@
      *******************************/
 
     var a = null;
-    Cocoon.Store.on("load",{
-        started: function(){ 
-             console.log("onProductsFetchStarted");
+    Cocoon.Store.on("load", {
+        started: function() {
+            console.log("onProductsFetchStarted");
         },
-        success: function(products){
+        success: function(products) {
             for (var i = products.length - 1; i >= 0; i--) {
                 Cocoon.Store.addProduct(products[i]);
                 console.log("Adding product to the local database: " + JSON.stringify(products[i]));
@@ -17,8 +17,8 @@
 
             console.log("onProductsFetchCompleted: " + JSON.stringify(products));
         },
-        error: function(errorMessage){ 
-             console.log("onProductsFetchFailed");
+        error: function(errorMessage) {
+            console.log("onProductsFetchFailed");
         }
     });
 
@@ -26,19 +26,20 @@
      * Product purchase
      *******************************/
 
-    Cocoon.Store.on("purchase",{
-        started: function(productId){
-            console.log("Product purchase started: " + productId );
+    Cocoon.Store.on("purchase", {
+        started: function(productId) {
+            console.log("Product purchase started: " + productId);
         },
-        success: function(purchaseInfo){ 
+        success: function(purchaseInfo) {
             console.log("Product purchase completed: ");
             console.log(JSON.stringify(arguments));
+            Cocoon.Store.finish(purchaseInfo.transactionId);
         },
-        verification: function(productId,data){ 
+        verification: function(productId, data) {
             console.log("verification received");
             // This callback will be fired only when using "unmanaged" mode
             //in iOS refer to:
-            //https://developer.apple.com/library/ios/releasenotes/General/ValidateAppStoreReceipt/Chapters/ValidateRemotely.html#//apple_ref/doc/uid/TP40010573-CH104-SW1
+            //https://developer.apple.com/library/ios/releasenotes/General/ValidateAppStoreReceipt/Chapters/Valida...
             // An example of the implementing server is:
             // https://github.com/pcrawfor/iap_verifier
 
@@ -60,7 +61,7 @@
             Cocoon.Store.finish(orderId);
             console.log("======= purchase finished ===========");
         },
-        error: function(productId, err){
+        error: function(productId, err) {
             console.log("Product purchase failed: " + err);
         }
     });
@@ -69,14 +70,14 @@
      * Consume purchase mode
      *******************************/
 
-    Cocoon.Store.on("consume",{
-        started: function(transactionId){
+    Cocoon.Store.on("consume", {
+        started: function(transactionId) {
             console.log("Consume purchase started: " + transactionId);
         },
-        success: function(transactionId){
-            console.log("Consume purchase completed: "  + transactionId);
+        success: function(transactionId) {
+            console.log("Consume purchase completed: " + transactionId);
         },
-        error: function(transactionId, err){ 
+        error: function(transactionId, err) {
             console.log("Consume purchase failed: " + err);
         }
     });
@@ -85,11 +86,11 @@
      * Restore purchases mode
      *******************************/
 
-    Cocoon.Store.on("restore",{
-        started: function(){ 
+    Cocoon.Store.on("restore", {
+        started: function() {
             console.log("Restore purchases started.");
         },
-        success:function() {
+        success: function() {
             console.log("Restore purchases completed.");
             console.log("EO LOOP");
             for (var prop in arguments) {
@@ -97,7 +98,7 @@
             };
             console.log("EOF LOOP");
         },
-        error: function(errorMessage){ 
+        error: function(errorMessage) {
             console.log("Restore purchases failed: " + errorMessage);
         }
     });
